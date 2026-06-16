@@ -1262,14 +1262,14 @@ function claimDailyReward() {
 const SPIN_KEY = 'bm_spin_v1';
 
 const SPIN_PRIZES = [
-  { icon:'❤️',   label:'+1 ชีวิต',       color:'#dc2626', grant:(){ addLife(1); }              },
-  { icon:'✨',   label:'+60 XP',          color:'#7c3aed', grant:(){ applyXP(60); updateXPUI(); } },
-  { icon:'⏱️',   label:'+2 เพิ่มเวลา',   color:'#0369a1', grant:(){ pupCharges[0]+=2; updatePupUI(); } },
-  { icon:'💎',   label:'+120 XP',         color:'#0f766e', grant:(){ applyXP(120); updateXPUI(); } },
-  { icon:'👁️',   label:'+2 แอบดู',        color:'#b45309', grant:(){ pupCharges[1]+=2; updatePupUI(); } },
-  { icon:'❤️❤️', label:'+2 ชีวิต',       color:'#9f1239', grant:(){ addLife(2); }              },
-  { icon:'💥',   label:'+2 จับคู่ให้',    color:'#6d28d9', grant:(){ pupCharges[2]+=2; updatePupUI(); } },
-  { icon:'⭐',   label:'+250 XP',         color:'#b45309', grant:(){ applyXP(250); updateXPUI(); } },
+  { icon:'❤️',   label:'+1 ชีวิต',       color:'#dc2626', grant: function(){ addLife(1); }                       },
+  { icon:'✨',   label:'+60 XP',          color:'#7c3aed', grant: function(){ applyXP(60); updateXPUI(); }        },
+  { icon:'⏱️',   label:'+2 เพิ่มเวลา',   color:'#0369a1', grant: function(){ pupCharges[0]+=2; updatePupUI(); }  },
+  { icon:'💎',   label:'+120 XP',         color:'#0f766e', grant: function(){ applyXP(120); updateXPUI(); }       },
+  { icon:'👁️',   label:'+2 แอบดู',        color:'#b45309', grant: function(){ pupCharges[1]+=2; updatePupUI(); }  },
+  { icon:'❤️❤️', label:'+2 ชีวิต',       color:'#9f1239', grant: function(){ addLife(2); }                       },
+  { icon:'💥',   label:'+2 จับคู่ให้',    color:'#6d28d9', grant: function(){ pupCharges[2]+=2; updatePupUI(); }  },
+  { icon:'⭐',   label:'+250 XP',         color:'#b45309', grant: function(){ applyXP(250); updateXPUI(); }       },
 ];
 
 // น้ำหนักการออกรางวัล (ตาม index)
@@ -1657,9 +1657,9 @@ function processXPGain(isWin, pairs) {
   const result = applyXP(gained);
   updateXPUI();
   showXPResult(gained, result.levelsGained > 0);
-  spawnXPText(gained);
+  // FIX: หน่วง spawnXPText ให้ result screen โหลดก่อน (result แสดงที่ 800ms)
+  setTimeout(() => spawnXPText(gained), 900);
   if (result.levelsGained > 0) {
-    // หน่วงเพื่อให้ result screen โหลดก่อน
     setTimeout(() => showLevelUpModal(result.oldLevel, result.newLevel), 2000);
   }
 }
@@ -1893,8 +1893,7 @@ function saveProfile() {
     isCustom: !!customAvatarB64
   };
   localStorage.setItem(USER_KEY, JSON.stringify(currentUser));
-  updateUserUI();
-  showScreen('menu');
+  showMenu();   // FIX: ใช้ showMenu() แทน showScreen เพื่อ init XP/lives/streak/spin ด้วย
 }
 
 function validateProfileForm() {
@@ -1980,7 +1979,7 @@ function updateUserUI() {
 
 // ── Fill profile form for editing ───────
 function fillProfileForm() {
-  buildEmojiGrid();
+  // FIX: set state ก่อน build grid ครั้งเดียว เพื่อให้ highlight ถูกต้อง
   if (currentUser) {
     document.getElementById('profileNameInput').value = currentUser.name;
     if (currentUser.isCustom) {
@@ -1996,8 +1995,8 @@ function fillProfileForm() {
     selectedColor = 'b-green';
     customAvatarB64 = null;
   }
+  buildEmojiGrid();        // build หลัง set state — highlight จะถูกต้อง
   updateAvatarPreview();
-  buildEmojiGrid();
 }
 
 // ══════════════════════════════════════════
