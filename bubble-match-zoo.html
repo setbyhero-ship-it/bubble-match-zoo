@@ -421,6 +421,237 @@ body{background:#0b0b14;}
 @keyframes peekFade{0%{opacity:1;}80%{opacity:1;}100%{opacity:0;}}
 
 /* ─────────────────────────────────────
+   DAILY SPIN WHEEL
+───────────────────────────────────── */
+/* button in menu */
+.btn-spin{
+  width:100%;max-width:360px;padding:13px;border-radius:50px;border:none;cursor:pointer;
+  font-size:.95rem;font-weight:900;font-family:inherit;
+  background:linear-gradient(135deg,#f59e0b,#ef4444,#8b5cf6);
+  color:#fff;box-shadow:0 5px 22px rgba(245,158,11,.4);
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.btn-spin::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.15),transparent);
+}
+.btn-spin:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(245,158,11,.5);}
+.btn-spin.used{
+  background:rgba(255,255,255,.07);box-shadow:none;color:rgba(255,255,255,.35);
+  border:1px solid rgba(255,255,255,.1);cursor:default;
+}
+.btn-spin.used:hover{transform:none;}
+.spin-badge{
+  background:rgba(255,255,255,.2);border-radius:20px;padding:2px 8px;font-size:.7rem;
+}
+/* spin modal */
+#spin-modal{
+  position:fixed;inset:0;z-index:470;display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.88);backdrop-filter:blur(14px);
+  opacity:0;pointer-events:none;transition:opacity .3s;
+}
+#spin-modal.show{opacity:1;pointer-events:all;}
+.spin-card{
+  background:rgba(8,8,22,.97);border:2px solid rgba(245,158,11,.4);
+  border-radius:28px;padding:24px 20px 20px;text-align:center;
+  max-width:320px;width:94%;display:flex;flex-direction:column;align-items:center;gap:10px;
+  animation:splashIn .4s cubic-bezier(.175,.885,.32,1.275) both;
+  box-shadow:0 0 60px rgba(245,158,11,.2);
+}
+.spin-title{font-size:1.2rem;font-weight:900;color:#fbbf24;letter-spacing:.5px;}
+.spin-sub{font-size:.75rem;color:rgba(255,255,255,.45);margin-top:-4px;}
+/* wheel wrapper */
+.spin-wheel-wrap{position:relative;width:268px;height:268px;display:flex;align-items:center;justify-content:center;}
+.spin-pointer{
+  position:absolute;top:-6px;left:50%;transform:translateX(-50%);
+  font-size:1.4rem;color:#fbbf24;z-index:5;line-height:1;
+  filter:drop-shadow(0 2px 6px rgba(245,158,11,.8));
+}
+.spin-wheel-rot{
+  width:260px;height:260px;border-radius:50%;
+  box-shadow:0 0 0 4px rgba(245,158,11,.3),0 0 30px rgba(245,158,11,.2);
+  will-change:transform;
+}
+.spin-wheel-rot.spinning{
+  transition:transform 4.2s cubic-bezier(0.17,0.67,0.08,0.99);
+}
+/* prize reveal */
+.spin-prize-reveal{
+  background:linear-gradient(135deg,rgba(245,158,11,.15),rgba(139,92,246,.15));
+  border:1.5px solid rgba(245,158,11,.4);border-radius:16px;
+  padding:12px 20px;display:flex;align-items:center;gap:12px;width:100%;
+  animation:splashIn .4s cubic-bezier(.175,.885,.32,1.275) both;
+}
+.spr-icon{font-size:2rem;}
+.spr-text{text-align:left;}
+.spr-got{font-size:.68rem;color:rgba(255,255,255,.4);font-weight:700;letter-spacing:1px;}
+.spr-label{font-size:1rem;font-weight:900;color:#fbbf24;}
+/* buttons */
+.btn-spin-go{
+  width:100%;padding:13px;border-radius:50px;border:none;cursor:pointer;
+  font-size:.95rem;font-weight:900;font-family:inherit;
+  background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;
+  box-shadow:0 4px 16px rgba(245,158,11,.4);transition:transform .15s;
+}
+.btn-spin-go:disabled{
+  background:rgba(255,255,255,.08);color:rgba(255,255,255,.3);
+  box-shadow:none;cursor:default;
+}
+.btn-spin-go:not(:disabled):hover{transform:scale(1.03);}
+.btn-spin-close{
+  background:transparent;border:1px solid rgba(255,255,255,.12);
+  border-radius:50px;padding:8px 20px;color:rgba(255,255,255,.4);
+  cursor:pointer;font-size:.8rem;font-family:inherit;
+}
+/* ─────────────────────────────────────
+   LIVES / ENERGY BAR
+───────────────────────────────────── */
+.lives-bar{
+  display:flex;align-items:center;gap:10px;
+  background:rgba(5,5,18,.82);border:1.5px solid rgba(255,80,80,.3);
+  border-radius:50px;padding:7px 14px;
+  width:100%;max-width:360px;justify-content:space-between;
+  cursor:default;
+}
+.lives-hearts{display:flex;gap:4px;}
+.lheart{font-size:1.2rem;transition:transform .2s,filter .2s;}
+.lheart.empty{filter:grayscale(1) opacity(.35);}
+.lheart.pop{animation:heartPop .4s cubic-bezier(.175,.885,.32,1.275) both;}
+@keyframes heartPop{0%{transform:scale(0);}60%{transform:scale(1.3);}100%{transform:scale(1);}}
+.lives-regen{font-size:.7rem;color:rgba(255,160,160,.7);line-height:1.2;text-align:right;}
+.lives-regen strong{color:#ff8080;font-size:.8rem;}
+
+/* game-header lives mini */
+.gh-lives{display:flex;gap:3px;margin-left:auto;}
+.gh-lheart{font-size:.9rem;}
+.gh-lheart.empty{filter:grayscale(1) opacity(.3);}
+
+/* No-lives modal */
+#no-lives-modal{
+  position:fixed;inset:0;z-index:450;display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.85);backdrop-filter:blur(12px);
+  opacity:0;pointer-events:none;transition:opacity .3s;
+}
+#no-lives-modal.show{opacity:1;pointer-events:all;}
+.no-lives-card{
+  background:rgba(8,8,22,.97);border:1.5px solid rgba(255,80,80,.4);
+  border-radius:24px;padding:28px 24px;text-align:center;
+  max-width:300px;width:90%;
+  animation:splashIn .4s cubic-bezier(.175,.885,.32,1.275) both;
+}
+.no-lives-icon{font-size:3rem;margin-bottom:8px;}
+.no-lives-title{font-size:1.1rem;font-weight:900;color:#ff6666;margin-bottom:6px;}
+.no-lives-desc{font-size:.82rem;color:rgba(255,255,255,.6);line-height:1.4;margin-bottom:16px;}
+.no-lives-timer{
+  font-size:1.4rem;font-weight:900;color:#fff;
+  background:rgba(255,60,60,.15);border-radius:12px;padding:8px 16px;
+  margin-bottom:14px;letter-spacing:2px;
+}
+.no-lives-timer span{color:#ff8080;}
+.btn-watch-ad{
+  width:100%;padding:12px;border-radius:50px;border:none;cursor:pointer;font-size:.95rem;font-weight:700;
+  background:linear-gradient(135deg,#ff6600,#ffaa00);color:#fff;
+  box-shadow:0 4px 16px rgba(255,100,0,.35);margin-bottom:8px;
+}
+.btn-watch-ad:hover{transform:scale(1.03);}
+.btn-nolives-close{
+  width:100%;padding:10px;border-radius:50px;border:1px solid rgba(255,255,255,.15);
+  background:transparent;color:rgba(255,255,255,.5);cursor:pointer;font-size:.85rem;
+}
+
+/* ─────────────────────────────────────
+   XP / LEVEL BAR  (menu)
+───────────────────────────────────── */
+.xp-bar-wrap{
+  width:100%;max-width:360px;
+  background:rgba(5,5,18,.82);border:1.5px solid rgba(120,80,255,.3);
+  border-radius:50px;padding:8px 14px;display:flex;align-items:center;gap:10px;
+}
+.xp-level-badge{
+  min-width:36px;height:36px;border-radius:50%;
+  background:linear-gradient(135deg,#7c3aed,#a855f7);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.75rem;font-weight:900;color:#fff;
+  box-shadow:0 0 10px rgba(168,85,247,.5);flex-shrink:0;
+}
+.xp-info{flex:1;min-width:0;}
+.xp-rank-name{font-size:.65rem;color:#c084fc;font-weight:700;letter-spacing:.5px;margin-bottom:2px;}
+.xp-progress-row{display:flex;align-items:center;gap:6px;}
+.xp-track{flex:1;height:6px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden;}
+.xp-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#7c3aed,#ec4899);transition:width .6s cubic-bezier(.4,0,.2,1);}
+.xp-nums{font-size:.6rem;color:rgba(255,255,255,.4);white-space:nowrap;}
+
+/* game header XP mini */
+.gh-xp{
+  display:flex;align-items:center;gap:4px;
+  background:rgba(124,58,237,.2);border-radius:20px;padding:2px 7px;
+}
+.gh-xp-lv{font-size:.65rem;font-weight:900;color:#c084fc;}
+
+/* XP gain float (result screen) */
+.xp-gain-anim{
+  position:fixed;left:50%;top:45%;transform:translateX(-50%);
+  font-size:1.1rem;font-weight:900;color:#c084fc;
+  text-shadow:0 0 12px #7c3aed;pointer-events:none;z-index:500;
+  animation:xpFloat 2s ease-out forwards;
+}
+@keyframes xpFloat{
+  0%{opacity:0;transform:translateX(-50%) translateY(0);}
+  20%{opacity:1;}
+  80%{opacity:1;transform:translateX(-50%) translateY(-60px);}
+  100%{opacity:0;transform:translateX(-50%) translateY(-80px);}
+}
+
+/* XP result summary box */
+.xp-result-box{
+  display:flex;align-items:center;gap:10px;
+  background:rgba(124,58,237,.12);border:1px solid rgba(168,85,247,.2);
+  border-radius:14px;padding:8px 12px;margin-bottom:8px;
+}
+.xp-result-icon{font-size:1.2rem;}
+.xp-result-info{flex:1;}
+.xp-result-gained{font-size:.82rem;font-weight:700;color:#c084fc;}
+.xp-result-bar-wrap{height:5px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden;margin-top:3px;}
+.xp-result-bar{height:100%;border-radius:99px;background:linear-gradient(90deg,#7c3aed,#ec4899);transition:width 1s .3s ease-out;}
+
+/* Level-up modal */
+#lvup-modal{
+  position:fixed;inset:0;z-index:460;display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.85);backdrop-filter:blur(14px);
+  opacity:0;pointer-events:none;transition:opacity .3s;
+}
+#lvup-modal.show{opacity:1;pointer-events:all;}
+.lvup-card{
+  background:rgba(8,8,22,.97);border:2px solid rgba(168,85,247,.5);
+  border-radius:28px;padding:32px 24px;text-align:center;
+  max-width:300px;width:90%;
+  animation:splashIn .5s cubic-bezier(.175,.885,.32,1.275) both;
+  box-shadow:0 0 60px rgba(124,58,237,.35);
+}
+.lvup-burst{font-size:3rem;animation:burstSpin 1s ease-out;}
+@keyframes burstSpin{0%{transform:scale(0) rotate(-180deg);}70%{transform:scale(1.2) rotate(10deg);}100%{transform:scale(1) rotate(0);}  }
+.lvup-label{font-size:.7rem;letter-spacing:3px;color:#a855f7;font-weight:700;margin:8px 0 4px;}
+.lvup-num{font-size:3.5rem;font-weight:900;
+  background:linear-gradient(135deg,#a855f7,#ec4899,#f59e0b);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  line-height:1;
+}
+.lvup-rank{font-size:1rem;font-weight:700;color:#fff;margin:6px 0;}
+.lvup-desc{font-size:.78rem;color:rgba(255,255,255,.5);margin-bottom:18px;}
+.lvup-rewards{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:18px;}
+.lvup-reward-item{
+  background:rgba(255,255,255,.07);border-radius:10px;padding:6px 10px;
+  font-size:.75rem;color:#fff;display:flex;align-items:center;gap:5px;
+}
+.btn-lvup-ok{
+  width:100%;padding:13px;border-radius:50px;border:none;cursor:pointer;
+  font-size:1rem;font-weight:900;font-family:inherit;
+  background:linear-gradient(135deg,#7c3aed,#a855f7,#ec4899);
+  color:#fff;box-shadow:0 5px 20px rgba(124,58,237,.45);
+}
+
+/* ─────────────────────────────────────
    AD MODAL
 ───────────────────────────────────── */
 #ad-modal{position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .3s;}
@@ -434,6 +665,73 @@ body{background:#0b0b14;}
 .ad-skip{width:100%;padding:12px;border:none;border-radius:50px;background:linear-gradient(135deg,#ffc832,#ff8800);color:#000;font-size:.95rem;font-weight:900;font-family:inherit;cursor:pointer;opacity:.3;pointer-events:none;transition:all .3s;}
 .ad-skip.ready{opacity:1;pointer-events:all;}
 .ad-cancel{display:block;margin-top:8px;background:none;border:none;color:rgba(255,255,255,.3);font-size:.7rem;cursor:pointer;font-family:inherit;}
+
+/* ─────────────────────────────────────
+   STREAK BADGE
+───────────────────────────────────── */
+.streak-chip{
+  display:flex;align-items:center;gap:8px;
+  background:rgba(5,5,18,.85);border:1.5px solid rgba(255,160,0,.35);
+  border-radius:50px;padding:7px 14px 7px 10px;
+  backdrop-filter:blur(16px);cursor:pointer;transition:all .2s;
+  align-self:flex-start;
+}
+.streak-chip:hover{background:rgba(255,160,0,.12);}
+.streak-fire{font-size:1.3rem;animation:firePulse 1.5s ease-in-out infinite;}
+@keyframes firePulse{0%,100%{transform:scale(1);}50%{transform:scale(1.15);}}
+.streak-fire.cold{animation:none;filter:grayscale(1);opacity:.5;}
+.streak-num{font-size:1rem;font-weight:900;color:#ffc832;}
+.streak-label{font-size:.62rem;color:rgba(255,255,255,.45);margin-top:1px;}
+
+/* ─────────────────────────────────────
+   STREAK MODAL
+───────────────────────────────────── */
+#streak-modal{
+  position:fixed;inset:0;z-index:400;display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.75);backdrop-filter:blur(10px);
+  opacity:0;pointer-events:none;transition:opacity .3s;
+}
+#streak-modal.show{opacity:1;pointer-events:all;}
+.streak-card{
+  background:rgba(8,8,22,.96);border:1.5px solid rgba(255,160,0,.3);
+  border-radius:28px;padding:28px 24px;text-align:center;
+  max-width:320px;width:90%;
+  animation:splashIn .4s cubic-bezier(.175,.885,.32,1.275) both;
+  position:relative;overflow:hidden;
+}
+.streak-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,200,50,.04),transparent);border-radius:28px;pointer-events:none;}
+.streak-big-fire{font-size:4rem;margin-bottom:4px;display:block;}
+.streak-title{font-size:1.5rem;font-weight:900;color:#fff;margin-bottom:4px;}
+.streak-desc{font-size:.8rem;color:rgba(255,255,255,.45);margin-bottom:20px;line-height:1.6;}
+/* 7-day dots */
+.streak-days{display:flex;justify-content:center;gap:8px;margin-bottom:20px;}
+.sday{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:900;transition:all .2s;}
+.sday.done{background:linear-gradient(135deg,#ffd700,#ff8800);color:#1a0800;box-shadow:0 3px 10px rgba(255,160,0,.5);}
+.sday.today{background:rgba(255,200,50,.15);border:2px solid #ffc832;color:#ffc832;}
+.sday.miss{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.2);}
+/* Reward box */
+.streak-reward-box{
+  background:rgba(255,200,50,.08);border:1.5px solid rgba(255,200,50,.25);
+  border-radius:16px;padding:14px;margin-bottom:16px;
+}
+.streak-reward-title{font-size:.72rem;font-weight:800;color:rgba(255,200,50,.7);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+.streak-reward-items{display:flex;justify-content:center;gap:12px;}
+.streak-reward-item{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:1.3rem;}
+.streak-reward-item span{font-size:.6rem;color:rgba(255,255,255,.5);font-weight:700;}
+.btn-claim{
+  display:block;width:100%;padding:13px;border:none;border-radius:50px;
+  background:linear-gradient(135deg,#ffd700,#ff8800);color:#1a0800;
+  font-size:1rem;font-weight:900;font-family:inherit;cursor:pointer;
+  box-shadow:0 5px 20px rgba(255,160,0,.45);transition:all .2s;
+}
+.btn-claim:hover{transform:translateY(-2px);}
+.btn-claim:disabled{opacity:.45;pointer-events:none;background:rgba(255,255,255,.1);color:rgba(255,255,255,.3);box-shadow:none;}
+.btn-close-streak{
+  display:block;width:100%;padding:10px;border:none;background:none;
+  color:rgba(255,255,255,.3);font-size:.8rem;font-family:inherit;cursor:pointer;margin-top:6px;
+}
+/* Broken streak */
+.streak-broken-msg{font-size:2rem;margin-bottom:6px;}
 
 /* ─────────────────────────────────────
    UTILITIES
@@ -497,12 +795,37 @@ input[type=file]{display:none;}
 <div class="screen hidden" id="menu">
   <!-- User chip -->
   <button class="btn-sound" onclick="toggleSound()" style="position:absolute;top:12px;right:12px;background:rgba(5,5,18,.85);border:1.5px solid rgba(255,255,255,.2);border-radius:50%;width:36px;height:36px;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.4);">🔊</button>
-  <div class="menu-user-chip" onclick="showScreen('profile')">
-    <div class="menu-user-av" id="menuUserAv">🐸</div>
-    <div>
-      <div class="menu-user-name" id="menuUserName">ผู้เล่น</div>
-      <div class="menu-user-edit">แตะเพื่อแก้ไข</div>
+  <div style="display:flex;gap:8px;align-items:center;width:100%;max-width:360px;justify-content:space-between;">
+    <div class="menu-user-chip" onclick="showScreen('profile')">
+      <div class="menu-user-av" id="menuUserAv">🐸</div>
+      <div>
+        <div class="menu-user-name" id="menuUserName">ผู้เล่น</div>
+        <div class="menu-user-edit">แตะเพื่อแก้ไข</div>
+      </div>
     </div>
+    <div class="streak-chip" id="streakChip" onclick="openStreakModal()">
+      <span class="streak-fire" id="streakFireIcon">🔥</span>
+      <div>
+        <div class="streak-num" id="streakNumDisplay">0</div>
+        <div class="streak-label">วันติดต่อ</div>
+      </div>
+    </div>
+  </div>
+  <!-- XP / Level bar -->
+  <div class="xp-bar-wrap">
+    <div class="xp-level-badge" id="menuLvBadge">1</div>
+    <div class="xp-info">
+      <div class="xp-rank-name" id="menuRankName">🐣 มือใหม่</div>
+      <div class="xp-progress-row">
+        <div class="xp-track"><div class="xp-fill" id="menuXpFill" style="width:0%"></div></div>
+        <div class="xp-nums" id="menuXpNums">0 / 100</div>
+      </div>
+    </div>
+  </div>
+  <!-- Lives bar -->
+  <div class="lives-bar" id="livesBar" onclick="openNoLivesModal(false)">
+    <div class="lives-hearts" id="livesHearts"></div>
+    <div class="lives-regen" id="livesRegen"></div>
   </div>
   <div class="menu-title-wrap">
     <div class="menu-title">เลือกระดับความยาก</div>
@@ -522,6 +845,9 @@ input[type=file]{display:none;}
       <div class="dc-badge">Hell</div><div class="dc-icon">💀</div><div class="dc-name">นรก</div>
     </div>
   </div>
+  <button class="btn-spin" id="menuBtnSpin" onclick="openSpinModal()">
+    🎡 <span>หมุนวงล้อนำโชค!</span><span class="spin-badge" id="spinBadge">ฟรีวันนี้!</span>
+  </button>
   <button class="btn-leaderboard" onclick="openLeaderboard()">🏆 อันดับ Top 100</button>
 </div>
 
@@ -539,6 +865,8 @@ input[type=file]{display:none;}
       <div class="score-val" id="scoreVal">0</div>
       <div class="combo-badge" id="comboBadge">Combo x0</div>
     </div>
+    <div class="gh-xp"><div class="gh-xp-lv" id="ghXpLv">Lv.1</div></div>
+    <div class="gh-lives" id="ghLives"></div>
     <div class="timer-block">
       <div class="timer-ring">
         <svg width="44" height="44" viewBox="0 0 44 44">
@@ -568,6 +896,14 @@ input[type=file]{display:none;}
       <div class="rs-label">คะแนนรวม</div>
       <div class="rs-val" id="finalScore">0</div>
     </div>
+    <div class="xp-result-box" id="xpResultBox" style="display:none">
+      <div class="xp-result-icon">✨</div>
+      <div class="xp-result-info">
+        <div class="xp-result-gained" id="xpResultGained">+0 XP</div>
+        <div class="xp-result-bar-wrap"><div class="xp-result-bar" id="xpResultBar" style="width:0%"></div></div>
+      </div>
+      <div class="xp-level-badge" id="xpResultLvBadge" style="width:32px;height:32px;font-size:.7rem;">1</div>
+    </div>
     <div class="my-rank-badge" id="myRankBadge" style="display:none">🏅 กำลังคำนวณอันดับ...</div>
     <div class="result-btns">
       <button class="btn-again" id="btnAgain" onclick="retryGame()">🔄 เล่นอีกครั้ง</button>
@@ -593,6 +929,70 @@ input[type=file]{display:none;}
   </div>
   <div class="lb-list" id="lbList">
     <div class="lb-spinner">กำลังโหลด...</div>
+  </div>
+</div>
+
+<!-- ══ STREAK MODAL ══ -->
+<div id="streak-modal">
+  <div class="streak-card">
+    <span class="streak-big-fire" id="streakBigIcon">🔥</span>
+    <div class="streak-title" id="streakModalTitle">🔥 5 วันติดต่อ!</div>
+    <div class="streak-desc" id="streakModalDesc">เยี่ยมมาก! เล่นทุกวันรับรางวัลพิเศษ</div>
+    <div class="streak-days" id="streakDays"></div>
+    <div class="streak-reward-box">
+      <div class="streak-reward-title">🎁 รางวัลประจำวัน</div>
+      <div class="streak-reward-items" id="streakRewardItems"></div>
+    </div>
+    <button class="btn-claim" id="btnClaimReward" onclick="claimDailyReward()">✅ รับรางวัล!</button>
+    <button class="btn-close-streak" onclick="closeStreakModal()">ปิด</button>
+  </div>
+</div>
+
+<!-- ══ SPIN WHEEL MODAL ══ -->
+<div id="spin-modal">
+  <div class="spin-card">
+    <div class="spin-title">🎡 วงล้อนำโชค!</div>
+    <div class="spin-sub" id="spinSubText">หมุนรับรางวัลฟรีวันละ 1 ครั้ง!</div>
+    <div class="spin-wheel-wrap">
+      <div class="spin-pointer">▼</div>
+      <div class="spin-wheel-rot" id="spinWheelRot">
+        <canvas id="spinCanvas" width="260" height="260"></canvas>
+      </div>
+    </div>
+    <div class="spin-prize-reveal" id="spinPrizeReveal" style="display:none">
+      <div class="spr-icon" id="sprIcon">🎁</div>
+      <div class="spr-text">
+        <div class="spr-got">คุณได้รับ</div>
+        <div class="spr-label" id="sprLabel">รางวัล!</div>
+      </div>
+    </div>
+    <button class="btn-spin-go" id="btnSpinGo" onclick="doSpin()">🎡 หมุนเลย!</button>
+    <button class="btn-spin-close" onclick="closeSpinModal()">ปิด</button>
+  </div>
+</div>
+
+<!-- ══ LEVEL-UP MODAL ══ -->
+<div id="lvup-modal">
+  <div class="lvup-card">
+    <div class="lvup-burst" id="lvupBurst">🌟</div>
+    <div class="lvup-label">LEVEL UP!</div>
+    <div class="lvup-num" id="lvupNum">2</div>
+    <div class="lvup-rank" id="lvupRank">🐤 ผู้ฝึกหัด</div>
+    <div class="lvup-desc" id="lvupDesc">ยินดีด้วย! คุณเก่งขึ้นแล้ว</div>
+    <div class="lvup-rewards" id="lvupRewards"></div>
+    <button class="btn-lvup-ok" onclick="closeLvUpModal()">🚀 เดินหน้าต่อ!</button>
+  </div>
+</div>
+
+<!-- ══ NO-LIVES MODAL ══ -->
+<div id="no-lives-modal">
+  <div class="no-lives-card">
+    <div class="no-lives-icon">💔</div>
+    <div class="no-lives-title">หมดชีวิตแล้ว!</div>
+    <div class="no-lives-desc">ต้องรอให้ชีวิตฟื้น หรือดูโฆษณาเพื่อรับ ❤️ เพิ่มทันที</div>
+    <div class="no-lives-timer" id="noLivesTimer"><span>00:00</span> ถึงชีวิตถัดไป</div>
+    <button class="btn-watch-ad" onclick="watchAdForLife()">📺 ดูโฆษณา → รับ ❤️ ฟรี!</button>
+    <button class="btn-nolives-close" onclick="closeNoLivesModal()">ปิด</button>
   </div>
 </div>
 
@@ -688,6 +1088,758 @@ function playSound(type) {
       });
     }
   } catch(e) { /* เสียงไม่รองรับก็ข้ามได้ */ }
+}
+
+// ══════════════════════════════════════════
+//  DAILY STREAK SYSTEM
+// ══════════════════════════════════════════
+const STREAK_KEY = 'bm_streak_v1';
+const STREAK_MILESTONES = [3,7,14,21,30,60,100];
+
+function getTodayStr() {
+  return new Date().toLocaleDateString('th-TH');
+}
+function getDateStr(offsetDays) {
+  const d = new Date();
+  d.setDate(d.getDate() + offsetDays);
+  return d.toLocaleDateString('th-TH');
+}
+
+function loadStreakData() {
+  const def = {streak:0, lastPlayDate:'', longestStreak:0, todayClaimed:false, totalDays:0, history:[]};
+  try { return {...def, ...JSON.parse(localStorage.getItem(STREAK_KEY) || '{}')}; }
+  catch(e) { return def; }
+}
+function saveStreakData(d) { localStorage.setItem(STREAK_KEY, JSON.stringify(d)); }
+
+// เรียกเมื่อจบเกม (ชนะหรือแพ้)
+function onGamePlayed() {
+  const data = loadStreakData();
+  const today = getTodayStr();
+  const yesterday = getDateStr(-1);
+  let streakChanged = false, wasBroken = false, oldStreak = data.streak;
+
+  if (data.lastPlayDate === today) {
+    // เล่นแล้ววันนี้ ไม่ต้องทำอะไร
+    return;
+  } else if (data.lastPlayDate === yesterday || data.lastPlayDate === '') {
+    // ต่อ streak หรือวันแรก
+    data.streak = (data.lastPlayDate === '') ? 1 : data.streak + 1;
+    data.totalDays = (data.totalDays || 0) + 1;
+    if (data.streak > data.longestStreak) data.longestStreak = data.streak;
+    streakChanged = true;
+  } else {
+    // streak ขาด
+    wasBroken = data.streak > 1;
+    oldStreak = data.streak;
+    data.streak = 1;
+    data.totalDays = (data.totalDays || 0) + 1;
+    streakChanged = true;
+  }
+  data.lastPlayDate = today;
+  data.todayClaimed = false;
+  // เก็บ history 7 วัน
+  if (!data.history) data.history = [];
+  data.history.push(today);
+  if (data.history.length > 7) data.history = data.history.slice(-7);
+  saveStreakData(data);
+
+  // แสดง modal หลังจบเกม
+  if (streakChanged) {
+    updateStreakUI(data);
+    setTimeout(() => openStreakModal(wasBroken ? oldStreak : 0), 1200);
+  }
+}
+
+// อัปเดต badge ใน menu
+function updateStreakUI(data) {
+  if (!data) data = loadStreakData();
+  const num = document.getElementById('streakNumDisplay');
+  const fire = document.getElementById('streakFireIcon');
+  if (num) num.textContent = data.streak;
+  if (fire) {
+    const isActive = data.lastPlayDate === getTodayStr() || data.streak > 0;
+    fire.classList.toggle('cold', data.streak === 0);
+  }
+}
+
+// เปิด streak modal
+function openStreakModal(brokenStreak = 0) {
+  const data = loadStreakData();
+  const today = getTodayStr();
+  const isMilestone = STREAK_MILESTONES.includes(data.streak);
+
+  // ไอคอนหลัก
+  const bigIcon = document.getElementById('streakBigIcon');
+  const title = document.getElementById('streakModalTitle');
+  const desc = document.getElementById('streakModalDesc');
+
+  if (brokenStreak > 1) {
+    bigIcon.textContent = '💔';
+    title.textContent = `Streak ขาดแล้ว...`;
+    desc.textContent = `เล่นได้ ${brokenStreak} วัน แต่ว่างไปวันนึง\nเริ่มใหม่วันนี้เลย! เป็นวันที่ 1`;
+  } else if (isMilestone) {
+    const milestoneEmoji = {3:'🎯',7:'🌟',14:'💎',21:'👑',30:'🏆',60:'🔱',100:'🌈'}[data.streak] || '🎉';
+    bigIcon.textContent = milestoneEmoji;
+    title.textContent = `${data.streak} วันติดต่อ!`;
+    desc.textContent = `ยอดเยี่ยมมากเลย! สถิติใหม่ ${data.streak} วัน\nรักษา streak ไว้ให้ได้นะ!`;
+  } else {
+    bigIcon.textContent = '🔥';
+    title.textContent = data.streak <= 1 ? 'เริ่ม Streak แล้ว!' : `🔥 ${data.streak} วันติดต่อ!`;
+    desc.textContent = data.streak <= 1
+      ? 'เล่นทุกวันเพื่อสะสม streak และรับรางวัลพิเศษ!'
+      : `สุดยอด! เล่นมาแล้ว ${data.streak} วันติดกัน\nสถิติดีที่สุด: ${data.longestStreak} วัน`;
+  }
+
+  // 7-day dots
+  const daysEl = document.getElementById('streakDays');
+  daysEl.innerHTML = '';
+  for (let i = -6; i <= 0; i++) {
+    const dateStr = getDateStr(i);
+    const played = data.history && data.history.includes(dateStr);
+    const isToday = i === 0;
+    const div = document.createElement('div');
+    div.className = 'sday ' + (played ? 'done' : isToday ? 'today' : 'miss');
+    const dayNames = ['อา','จ','อ','พ','พฤ','ศ','ส'];
+    const d = new Date(); d.setDate(d.getDate() + i);
+    div.textContent = played ? '🔥' : (isToday ? '▸' : dayNames[d.getDay()]);
+    daysEl.appendChild(div);
+  }
+
+  // รางวัลตาม streak
+  const rewards = getStreakRewards(data.streak);
+  const rewardEl = document.getElementById('streakRewardItems');
+  rewardEl.innerHTML = rewards.map(r => `<div class="streak-reward-item">${r.icon}<span>${r.label}</span></div>`).join('');
+
+  // ปุ่ม claim
+  const btnClaim = document.getElementById('btnClaimReward');
+  if (data.todayClaimed || data.lastPlayDate !== today) {
+    btnClaim.disabled = true;
+    btnClaim.textContent = data.todayClaimed ? '✅ รับแล้ววันนี้' : '🔒 เล่นก่อนรับรางวัล';
+  } else {
+    btnClaim.disabled = false;
+    btnClaim.textContent = '✅ รับรางวัล!';
+  }
+
+  document.getElementById('streak-modal').classList.add('show');
+}
+
+function closeStreakModal() {
+  document.getElementById('streak-modal').classList.remove('show');
+}
+
+function getStreakRewards(streak) {
+  if (streak >= 30) return [{icon:'👑',label:'ชาร์จ x3'},{icon:'⏱️',label:'+3 ชาร์จ'},{icon:'💥',label:'+2 ชาร์จ'}];
+  if (streak >= 14) return [{icon:'💎',label:'ชาร์จ x2'},{icon:'⏱️',label:'+2 ชาร์จ'},{icon:'❄️',label:'+1 ชาร์จ'}];
+  if (streak >= 7)  return [{icon:'⭐',label:'ชาร์จ x2'},{icon:'⏱️',label:'+2 ชาร์จ'}];
+  if (streak >= 3)  return [{icon:'🎁',label:'ชาร์จ x1'},{icon:'⏱️',label:'+1 ชาร์จ'}];
+  return [{icon:'🎁',label:'+1 ชาร์จ'}];
+}
+
+function claimDailyReward() {
+  const data = loadStreakData();
+  if (data.todayClaimed) return;
+  data.todayClaimed = true;
+  saveStreakData(data);
+  // แจก power-up ตาม streak
+  const s = data.streak;
+  if (s >= 30) { pupCharges[0]+=3; pupCharges[2]+=2; pupCharges[3]+=1; }
+  else if (s >= 14) { pupCharges[0]+=2; pupCharges[3]+=1; }
+  else if (s >= 7)  { pupCharges[0]+=2; }
+  else if (s >= 3)  { pupCharges[0]+=1; }
+  else              { pupCharges[0]+=1; }
+  updatePupUI();
+  playSound('win');
+  spawnConfetti();
+  const btn = document.getElementById('btnClaimReward');
+  btn.disabled = true; btn.textContent = '✅ รับแล้ว!';
+  setTimeout(closeStreakModal, 1500);
+}
+
+// ══════════════════════════════════════════
+//  DAILY SPIN WHEEL
+// ══════════════════════════════════════════
+const SPIN_KEY = 'bm_spin_v1';
+
+const SPIN_PRIZES = [
+  { icon:'❤️',   label:'+1 ชีวิต',       color:'#dc2626', grant:(){ addLife(1); }              },
+  { icon:'✨',   label:'+60 XP',          color:'#7c3aed', grant:(){ applyXP(60); updateXPUI(); } },
+  { icon:'⏱️',   label:'+2 เพิ่มเวลา',   color:'#0369a1', grant:(){ pupCharges[0]+=2; updatePupUI(); } },
+  { icon:'💎',   label:'+120 XP',         color:'#0f766e', grant:(){ applyXP(120); updateXPUI(); } },
+  { icon:'👁️',   label:'+2 แอบดู',        color:'#b45309', grant:(){ pupCharges[1]+=2; updatePupUI(); } },
+  { icon:'❤️❤️', label:'+2 ชีวิต',       color:'#9f1239', grant:(){ addLife(2); }              },
+  { icon:'💥',   label:'+2 จับคู่ให้',    color:'#6d28d9', grant:(){ pupCharges[2]+=2; updatePupUI(); } },
+  { icon:'⭐',   label:'+250 XP',         color:'#b45309', grant:(){ applyXP(250); updateXPUI(); } },
+];
+
+// น้ำหนักการออกรางวัล (ตาม index)
+const SPIN_WEIGHTS = [25, 20, 20, 12, 20, 8, 20, 5]; // รวม 130
+
+let spinCurrentAngle = 0; // track rotation across opens
+let spinning = false;
+
+function loadSpin() {
+  try { return {...{lastSpinDate:''}, ...JSON.parse(localStorage.getItem(SPIN_KEY)||'{}')}; }
+  catch(e) { return {lastSpinDate:''}; }
+}
+function saveSpin(d) { localStorage.setItem(SPIN_KEY, JSON.stringify(d)); }
+function canSpinToday() { return loadSpin().lastSpinDate !== getTodayStr(); }
+
+// weighted random prize index
+function pickPrizeIndex() {
+  const total = SPIN_WEIGHTS.reduce((a,b) => a+b, 0);
+  let r = Math.random() * total;
+  for (let i = 0; i < SPIN_WEIGHTS.length; i++) {
+    r -= SPIN_WEIGHTS[i];
+    if (r <= 0) return i;
+  }
+  return SPIN_WEIGHTS.length - 1;
+}
+
+// วาด wheel บน canvas
+function drawSpinWheel() {
+  const canvas = document.getElementById('spinCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width;
+  const cx = W / 2, cy = W / 2, r = W / 2 - 3;
+  const n = SPIN_PRIZES.length;
+  const arc = (2 * Math.PI) / n;
+
+  ctx.clearRect(0, 0, W, W);
+
+  for (let i = 0; i < n; i++) {
+    const startAngle = arc * i - Math.PI / 2;
+    const endAngle   = startAngle + arc;
+    const mid        = startAngle + arc / 2;
+
+    // segment fill
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, r, startAngle, endAngle);
+    ctx.closePath();
+    ctx.fillStyle = SPIN_PRIZES[i].color;
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,.25)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // text (rotate to read outward)
+    ctx.save();
+    ctx.translate(cx + Math.cos(mid) * r * 0.63, cy + Math.sin(mid) * r * 0.63);
+    ctx.rotate(mid + Math.PI / 2);
+    ctx.textAlign = 'center';
+
+    // emoji icon
+    ctx.font = '18px sans-serif';
+    ctx.fillStyle = '#fff';
+    ctx.fillText(SPIN_PRIZES[i].icon, 0, -14);
+
+    // label
+    ctx.font = 'bold 9px "Segoe UI",sans-serif';
+    ctx.fillStyle = 'rgba(255,255,255,.9)';
+    const words = SPIN_PRIZES[i].label.split(' ');
+    words.forEach((w, wi) => ctx.fillText(w, 0, 0 + wi * 11));
+
+    ctx.restore();
+  }
+
+  // outer ring
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(245,158,11,.6)';
+  ctx.lineWidth = 4;
+  ctx.stroke();
+
+  // center cap
+  ctx.beginPath();
+  ctx.arc(cx, cy, 22, 0, Math.PI * 2);
+  ctx.fillStyle = '#1e1b4b';
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(245,158,11,.8)';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  ctx.font = 'bold 11px sans-serif';
+  ctx.fillStyle = '#fbbf24';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('GO!', cx, cy);
+  ctx.textBaseline = 'alphabetic';
+}
+
+function openSpinModal() {
+  const modal = document.getElementById('spin-modal');
+  const btn   = document.getElementById('btnSpinGo');
+  const sub   = document.getElementById('spinSubText');
+  const badge = document.getElementById('spinBadge');
+  const reveal= document.getElementById('spinPrizeReveal');
+
+  reveal.style.display = 'none';
+  spinning = false;
+
+  drawSpinWheel();
+
+  if (canSpinToday()) {
+    btn.disabled = false;
+    btn.textContent = '🎡 หมุนเลย!';
+    sub.textContent = 'หมุนรับรางวัลฟรีวันละ 1 ครั้ง!';
+    badge.style.display = '';
+  } else {
+    btn.disabled = true;
+    btn.textContent = '✅ หมุนแล้ววันนี้ — กลับมาพรุ่งนี้!';
+    sub.textContent = 'รับรางวัลฟรีทุกวัน กลับมาพรุ่งนี้นะ!';
+    badge.style.display = 'none';
+  }
+
+  modal.classList.add('show');
+}
+
+function closeSpinModal() {
+  document.getElementById('spin-modal').classList.remove('show');
+}
+
+function doSpin() {
+  if (spinning || !canSpinToday()) return;
+  spinning = true;
+  const btn = document.getElementById('btnSpinGo');
+  btn.disabled = true;
+  btn.textContent = '⏳ กำลังหมุน...';
+  document.getElementById('spinPrizeReveal').style.display = 'none';
+
+  const prizeIdx  = pickPrizeIndex();
+  const segDeg    = 360 / SPIN_PRIZES.length;           // 45°
+  // angle to place prizeIdx under the pointer (top = 0°)
+  const landAngle = 360 - (prizeIdx * segDeg + segDeg / 2);
+  const fullSpins = (5 + Math.floor(Math.random() * 3)) * 360;
+  const targetRot = spinCurrentAngle + fullSpins + landAngle;
+
+  const wheelEl = document.getElementById('spinWheelRot');
+  // ล้าง transition → force reflow → ล้าง inline style ก่อนเพิ่ม class ให้ class CSS มีผล
+  wheelEl.style.transition = 'none';
+  void wheelEl.offsetWidth;
+  wheelEl.style.transition = '';           // FIX: ให้ .spinning class transition override ได้
+  wheelEl.classList.add('spinning');
+  wheelEl.style.transform = `rotate(${targetRot}deg)`;
+  spinCurrentAngle = targetRot;            // FIX: เก็บเต็ม ไม่ % 360 ให้สะสมต่อได้ถูกต้อง
+
+  // play tick sounds during spin
+  playSound('flip');
+  const tickInterval = setInterval(() => playSound('flip'), 180);
+
+  setTimeout(() => {
+    clearInterval(tickInterval);
+    playSound('match');
+
+    // mark spun today
+    saveSpin({lastSpinDate: getTodayStr()});
+    updateSpinButton();
+
+    // grant prize
+    SPIN_PRIZES[prizeIdx].grant();
+
+    // show prize reveal
+    const prize  = SPIN_PRIZES[prizeIdx];
+    document.getElementById('sprIcon').textContent  = prize.icon;
+    document.getElementById('sprLabel').textContent = prize.label;
+    const reveal = document.getElementById('spinPrizeReveal');
+    reveal.style.display = 'flex';
+
+    btn.textContent = '✅ หมุนแล้ววันนี้!';
+    spinning = false;
+
+    // confetti + XP text if XP prize
+    if (prize.label.includes('XP')) {
+      spawnConfetti();
+      const xpNum = parseInt(prize.label.replace(/\D/g,''), 10) || 0;
+      spawnXPText(xpNum);
+    } else {
+      spawnConfetti();
+    }
+    playSound('win');
+  }, 4400);
+}
+
+// อัปเดตปุ่มใน menu
+function updateSpinButton() {
+  const btn   = document.getElementById('menuBtnSpin');
+  const badge = document.getElementById('spinBadge');
+  if (!btn) return;
+  if (canSpinToday()) {
+    btn.classList.remove('used');
+    badge.textContent = 'ฟรีวันนี้!';
+    badge.style.display = '';
+  } else {
+    btn.classList.add('used');
+    badge.style.display = 'none';
+    btn.querySelector('span:first-of-type').textContent = '✅ หมุนแล้ววันนี้';
+  }
+}
+
+// ══════════════════════════════════════════
+//  XP / LEVEL SYSTEM
+// ══════════════════════════════════════════
+const XP_KEY = 'bm_xp_v1';
+
+// XP ที่ต้องการสะสมต่อระดับ: ระดับ 1=100, 2=150, 3=200, ...
+// xpForLevel(n) = 100 + (n-1)*50
+// cumulative threshold: totalXpForLevel(n) = sum_{i=1}^{n} xpForLevel(i) = 100n + 25n(n-1)
+function xpForLevel(lv) { return 100 + (lv - 1) * 50; }
+function totalXpForLevel(lv) { return lv <= 0 ? 0 : 100 * lv + 25 * lv * (lv - 1); }
+
+function getLevelFromTotalXP(totalXp) {
+  let lv = 1;
+  while (totalXpForLevel(lv) <= totalXp) lv++;
+  return lv - 1;                // ระดับปัจจุบัน
+}
+function getXpIntoCurrentLevel(totalXp) {
+  const lv = getLevelFromTotalXP(totalXp);
+  return totalXp - totalXpForLevel(lv);
+}
+function getXpNeededThisLevel(totalXp) {
+  const lv = getLevelFromTotalXP(totalXp);
+  return xpForLevel(lv + 1);
+}
+
+const RANK_TABLE = [
+  {min:1,  max:5,  icon:'🐣', name:'มือใหม่'},
+  {min:6,  max:10, icon:'🐤', name:'ผู้ฝึกหัด'},
+  {min:11, max:20, icon:'🦊', name:'นักสำรวจ'},
+  {min:21, max:30, icon:'🦁', name:'นักรบ'},
+  {min:31, max:50, icon:'🐉', name:'จอมทัพ'},
+  {min:51, max:75, icon:'⚔️', name:'ผู้พิชิต'},
+  {min:76, max:99, icon:'👑', name:'ราชัน'},
+  {min:100,max:Infinity,icon:'🌌',name:'เทพเจ้า'},
+];
+function getRankByLevel(lv) {
+  return RANK_TABLE.find(r => lv >= r.min && lv <= r.max) || RANK_TABLE[RANK_TABLE.length - 1];
+}
+
+// รางวัลตาม milestone level
+const LV_REWARDS = {
+  5:  [{icon:'❤️',label:'+1 ชีวิต'},{icon:'⏱️',label:'+2 ชาร์จ'}],
+  10: [{icon:'❤️',label:'+2 ชีวิต'},{icon:'💥',label:'+2 ชาร์จ'},{icon:'❄️',label:'+1 ชาร์จ'}],
+  20: [{icon:'❤️',label:'+3 ชีวิต'},{icon:'⏱️',label:'+3 ชาร์จ'},{icon:'👁️',label:'+2 ชาร์จ'}],
+  30: [{icon:'👑',label:'ปลดล็อค Hell Mode!'}],
+  50: [{icon:'🌌',label:'ชาร์จทุกอย่าง x3'}],
+};
+
+function loadXP() {
+  try { return {...{totalXp:0, level:1}, ...JSON.parse(localStorage.getItem(XP_KEY)||'{}')}; }
+  catch(e) { return {totalXp:0, level:1}; }
+}
+function saveXP(d) { localStorage.setItem(XP_KEY, JSON.stringify(d)); }
+
+// คำนวณ XP ที่ได้จากเกม
+function calcGameXP(gameScore, isWin, diffIdx, pairs) {
+  const diffMult = [1, 1.5, 2, 3][diffIdx] || 1;
+  let xp = 0;
+  xp += pairs * 10;                                         // ต่อคู่ที่จับได้
+  if (isWin) xp += 50 + Math.round(timeLeft * 2 * diffMult); // ชนะ + โบนัสเวลา
+  xp = Math.round(xp * diffMult);
+  return Math.max(xp, 5);
+}
+
+// เพิ่ม XP, ตรวจ level-up, return { gained, oldLevel, newLevel, levelsGained }
+function applyXP(gained) {
+  const data = loadXP();
+  const oldLevel = getLevelFromTotalXP(data.totalXp);
+  data.totalXp += gained;
+  const newLevel = getLevelFromTotalXP(data.totalXp);
+  data.level = newLevel;
+  saveXP(data);
+  return { gained, oldLevel, newLevel, levelsGained: newLevel - oldLevel };
+}
+
+// อัปเดต XP bar ใน menu + game header
+function updateXPUI() {
+  const data = loadXP();
+  const lv   = getLevelFromTotalXP(data.totalXp);
+  const rank = getRankByLevel(lv);
+  const xpIn = getXpIntoCurrentLevel(data.totalXp);
+  const xpNd = getXpNeededThisLevel(data.totalXp);
+  const pct  = Math.min(100, (xpIn / xpNd) * 100);
+
+  // menu
+  const badge = document.getElementById('menuLvBadge');
+  const rname = document.getElementById('menuRankName');
+  const fill  = document.getElementById('menuXpFill');
+  const nums  = document.getElementById('menuXpNums');
+  if (badge) badge.textContent = lv;
+  if (rname) rname.textContent = `${rank.icon} ${rank.name}`;
+  if (fill)  fill.style.width = pct + '%';
+  if (nums)  nums.textContent = `${xpIn} / ${xpNd}`;
+
+  // game header
+  const ghXp = document.getElementById('ghXpLv');
+  if (ghXp) ghXp.textContent = `Lv.${lv}`;
+}
+
+// แสดง XP summary ใน result screen
+function showXPResult(gained, isLevelUp) {
+  const data = loadXP();
+  const lv   = getLevelFromTotalXP(data.totalXp);
+  const xpIn = getXpIntoCurrentLevel(data.totalXp);
+  const xpNd = getXpNeededThisLevel(data.totalXp);
+  const pct  = Math.min(100, (xpIn / xpNd) * 100);
+
+  const box  = document.getElementById('xpResultBox');
+  const text = document.getElementById('xpResultGained');
+  const bar  = document.getElementById('xpResultBar');
+  const lvB  = document.getElementById('xpResultLvBadge');
+
+  if (!box) return;
+  box.style.display = 'flex';
+  if (text) text.textContent = `+${gained} XP  •  Lv.${lv}`;
+  if (lvB)  lvB.textContent = lv;
+  // animate bar เข้าหลัง delay เล็กน้อย
+  if (bar) { bar.style.width = '0%'; setTimeout(() => { bar.style.width = pct + '%'; }, 300); }
+}
+
+// floating XP text บน result screen
+function spawnXPText(gained) {
+  const el = document.createElement('div');
+  el.className = 'xp-gain-anim';
+  el.textContent = `✨ +${gained} XP`;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 2200);
+}
+
+// Level-up modal
+function showLevelUpModal(oldLv, newLv) {
+  const rank    = getRankByLevel(newLv);
+  const oldRank = getRankByLevel(oldLv);
+  const modal   = document.getElementById('lvup-modal');
+
+  document.getElementById('lvupBurst').textContent = rank.icon;
+  document.getElementById('lvupNum').textContent   = newLv;
+  document.getElementById('lvupRank').textContent  = `${rank.icon} ${rank.name}`;
+  document.getElementById('lvupDesc').textContent  =
+    rank.name !== oldRank.name
+      ? `🎊 ยศใหม่! คุณเป็น "${rank.name}" แล้ว!`
+      : `ยอดเยี่ยม! คุณเก่งขึ้นมาก เดินหน้าต่อไป!`;
+
+  // แจกรางวัลทุก milestone ระหว่าง oldLv→newLv (FIX: แยกออกจาก UI)
+  grantLvRewards(oldLv, newLv);
+
+  // แสดง rewards ของ newLv บน modal
+  const rewardsEl = document.getElementById('lvupRewards');
+  const rewards = LV_REWARDS[newLv] || [];
+  if (rewards.length) {
+    rewardsEl.innerHTML = rewards.map(r => `<div class="lvup-reward-item">${r.icon}<span>${r.label}</span></div>`).join('');
+  } else {
+    rewardsEl.innerHTML = `<div class="lvup-reward-item">⭐<span>ไปต่ออีก ${xpForLevel(newLv+1)} XP</span></div>`;
+  }
+
+  modal.classList.add('show');
+  // FIX: ไม่ playSound/confetti ซ้ำ — onWin เล่นไปแล้ว ให้แค่ spawnConfetti เล็กน้อย
+  setTimeout(() => spawnConfetti(), 200);
+}
+
+function closeLvUpModal() {
+  document.getElementById('lvup-modal').classList.remove('show');
+}
+
+function grantLvRewards(oldLv, newLv) {
+  // FIX: loop ทุก milestone ระหว่าง oldLv+1 ถึง newLv เพื่อไม่พลาดเมื่อ level-up ข้าม
+  for (let lv = oldLv + 1; lv <= newLv; lv++) {
+    if (lv === 5)  { addLife(1); pupCharges[0]+=2; }
+    if (lv === 10) { addLife(2); pupCharges[2]+=2; pupCharges[3]+=1; }
+    if (lv === 20) { addLife(3); pupCharges[0]+=3; pupCharges[1]+=2; }
+    if (lv === 50) { pupCharges = pupCharges.map(c => c + 3); }
+  }
+  updatePupUI();
+}
+
+// เรียกเมื่อจบเกม — ใส่ XP แล้ว trigger level-up ถ้ามี
+function processXPGain(isWin, pairs) {
+  const gained = calcGameXP(score, isWin, currentDiff, pairs);
+  const result = applyXP(gained);
+  updateXPUI();
+  showXPResult(gained, result.levelsGained > 0);
+  spawnXPText(gained);
+  if (result.levelsGained > 0) {
+    // หน่วงเพื่อให้ result screen โหลดก่อน
+    setTimeout(() => showLevelUpModal(result.oldLevel, result.newLevel), 2000);
+  }
+}
+
+// ══════════════════════════════════════════
+//  LIVES / ENERGY SYSTEM
+// ══════════════════════════════════════════
+const MAX_LIVES      = 5;
+const REGEN_MS       = 30 * 60 * 1000; // 30 นาที / ชีวิต
+const LIVES_KEY      = 'bm_lives_v1';
+let   livesRegenTimer = null;
+
+function loadLives() {
+  try { return {...{lives:MAX_LIVES, lastRegen:Date.now()}, ...JSON.parse(localStorage.getItem(LIVES_KEY)||'{}')}; }
+  catch(e) { return {lives:MAX_LIVES, lastRegen:Date.now()}; }
+}
+function saveLives(d) { localStorage.setItem(LIVES_KEY, JSON.stringify(d)); }
+
+// คืนค่าชีวิตที่ควรได้รับตามเวลาที่ผ่านไป
+function applyRegen(data) {
+  if (data.lives >= MAX_LIVES) { data.lastRegen = Date.now(); return data; }
+  const elapsed = Date.now() - data.lastRegen;
+  const gained  = Math.floor(elapsed / REGEN_MS);
+  if (gained > 0) {
+    data.lives = Math.min(MAX_LIVES, data.lives + gained);
+    data.lastRegen += gained * REGEN_MS;
+    if (data.lives >= MAX_LIVES) data.lastRegen = Date.now();
+    saveLives(data);
+  }
+  return data;
+}
+
+// เวลาที่เหลือก่อนชีวิตถัดไป (ms)
+function msUntilNextLife(data) {
+  if (data.lives >= MAX_LIVES) return 0;
+  const elapsed = Date.now() - data.lastRegen;
+  return Math.max(0, REGEN_MS - (elapsed % REGEN_MS));
+}
+
+function formatMS(ms) {
+  const s = Math.ceil(ms / 1000);
+  const m = Math.floor(s / 60), ss = s % 60;
+  return `${String(m).padStart(2,'0')}:${String(ss).padStart(2,'0')}`;
+}
+
+// อัปเดต UI ทุกที่
+function updateLivesUI() {
+  const data = applyRegen(loadLives());
+  const hearts = document.getElementById('livesHearts');
+  const regen  = document.getElementById('livesRegen');
+  const ghL    = document.getElementById('ghLives');
+
+  // menu bar
+  if (hearts) {
+    hearts.innerHTML = '';
+    for (let i = 0; i < MAX_LIVES; i++) {
+      const span = document.createElement('span');
+      span.className = 'lheart' + (i < data.lives ? '' : ' empty');
+      span.textContent = '❤️';
+      hearts.appendChild(span);
+    }
+  }
+  if (regen) {
+    if (data.lives >= MAX_LIVES) {
+      regen.innerHTML = '<strong>❤️ เต็มแล้ว!</strong>';
+    } else {
+      const ms = msUntilNextLife(data);
+      regen.innerHTML = `❤️ ถัดไปใน<br><strong>${formatMS(ms)}</strong>`;
+    }
+  }
+
+  // game header mini
+  if (ghL) {
+    ghL.innerHTML = '';
+    for (let i = 0; i < MAX_LIVES; i++) {
+      const span = document.createElement('span');
+      span.className = 'gh-lheart' + (i < data.lives ? '' : ' empty');
+      span.textContent = '❤️';
+      ghL.appendChild(span);
+    }
+  }
+
+  // update no-lives timer if open
+  const nlTimer = document.getElementById('noLivesTimer');
+  if (nlTimer && document.getElementById('no-lives-modal').classList.contains('show')) {
+    if (data.lives > 0) {
+      closeNoLivesModal();
+    } else {
+      nlTimer.innerHTML = `<span>${formatMS(msUntilNextLife(data))}</span> ถึงชีวิตถัดไป`;
+    }
+  }
+}
+
+// เริ่ม interval อัปเดต UI ทุกวินาที
+function startLivesTimer() {
+  if (livesRegenTimer) clearInterval(livesRegenTimer);
+  livesRegenTimer = setInterval(updateLivesUI, 1000);
+}
+
+// ตัดชีวิต 1 เมื่อแพ้
+function loseLife() {
+  const data = applyRegen(loadLives());
+  if (data.lives > 0) {
+    data.lives--;
+    // เริ่ม regen clock เมื่อชีวิตไม่เต็มครั้งแรก
+    if (data.lives === MAX_LIVES - 1) data.lastRegen = Date.now();
+    saveLives(data);
+  }
+  updateLivesUI();
+  animateLoseHeart(data.lives);
+}
+
+function animateLoseHeart(remaining) {
+  const hearts = document.getElementById('livesHearts');
+  if (!hearts) return;
+  const all = hearts.querySelectorAll('.lheart');
+  const idx = remaining; // index ที่เพิ่งหายไป (0-based)
+  if (all[idx]) {
+    // FIX: animate scale down แล้ว reset inline style ให้ CSS class .empty มีผล
+    all[idx].style.transition = 'transform .25s ease-in, filter .25s';
+    all[idx].style.transform  = 'scale(0)';
+    setTimeout(() => {
+      if (all[idx]) { all[idx].style.transform = ''; all[idx].style.transition = ''; }
+    }, 280);
+  }
+}
+
+// เพิ่มชีวิต (จากดูโฆษณา / รางวัล)
+function addLife(n = 1) {
+  const data = applyRegen(loadLives());
+  data.lives = Math.min(MAX_LIVES, data.lives + n);
+  saveLives(data);
+  updateLivesUI();
+  // pop animation
+  setTimeout(() => {
+    const hearts = document.getElementById('livesHearts');
+    if (!hearts) return;
+    const all = hearts.querySelectorAll('.lheart');
+    all.forEach((h, i) => {
+      if (!h.classList.contains('empty')) {
+        setTimeout(() => h.classList.add('pop'), i * 60);
+      }
+    });
+  }, 100);
+}
+
+// ตรวจก่อนเริ่มเกม
+function checkLivesBeforePlay(diffIdx) {
+  const data = applyRegen(loadLives());
+  if (data.lives <= 0) {
+    openNoLivesModal(true);
+    return false;
+  }
+  return true;
+}
+
+// modal
+function openNoLivesModal(blockPlay = false) {
+  const data = applyRegen(loadLives());
+  const modal = document.getElementById('no-lives-modal');
+  const timer = document.getElementById('noLivesTimer');
+  if (data.lives > 0 && !blockPlay) {
+    // แค่แสดง status ชีวิต ไม่ block
+    return;
+  }
+  if (timer) timer.innerHTML = `<span>${formatMS(msUntilNextLife(data))}</span> ถึงชีวิตถัดไป`;
+  modal.classList.add('show');
+}
+function closeNoLivesModal() {
+  document.getElementById('no-lives-modal').classList.remove('show');
+}
+
+// ดูโฆษณาเพื่อรับชีวิต
+function watchAdForLife() {
+  closeNoLivesModal();
+  showAd('❤️', 'รับชีวิตฟรี!', '❤️ +1 ชีวิต', () => {
+    addLife(1);
+    playSound('win');
+    spawnText('❤️ +1 ชีวิต!', '#ff6666', window.innerWidth/2, window.innerHeight/2 - 60);
+  });
 }
 
 // ══════════════════════════════════════════
@@ -1063,7 +2215,18 @@ function showScreen(id) {
   if (id === 'profile') fillProfileForm();
 }
 
-function showMenu() { stopTimer(); updateUserUI(); showScreen('menu'); }
+function showMenu() {
+  stopTimer();
+  updateUserUI(); updateStreakUI(); updateXPUI(); updateLivesUI();
+  startLivesTimer();
+  updateSpinButton();
+  showScreen('menu');
+  // auto-open spin modal ครั้งแรกของวัน (หน่วง 600ms ให้ menu เล่น transition ก่อน)
+  if (canSpinToday()) {
+    clearTimeout(showMenu._spinTimer);
+    showMenu._spinTimer = setTimeout(openSpinModal, 700);
+  }
+}
 function goMenu()   { stopTimer(); showMenu(); }
 
 function onSplashStart() {
@@ -1076,16 +2239,22 @@ function onSplashStart() {
 //  GAME LOGIC
 // ══════════════════════════════════════════
 function startGame(d) {
+  if (!checkLivesBeforePlay(d)) return; // block ถ้าไม่มีชีวิต
   currentDiff = d; diff = DIFFS[d];
   score = 0; combo = 0; matched = 0; flipped = []; busy = false; frozen = false; gameOver = false;
   pupCharges = [2, 2, 1, 1];
-  updatePupUI(); updateScore(); updateUserUI();
+  updatePupUI(); updateScore(); updateUserUI(); updateXPUI(); updateLivesUI();
   showScreen('game');
   buildBoard();
   timeLeft = diff.time; totalTime = diff.time;
   updateTimer(); startTimer();
 }
-function retryGame() { startGame(currentDiff); }
+function retryGame() {
+  // ถ้าแพ้แล้วไม่มีชีวิต แสดง modal แทน
+  const data = applyRegen(loadLives());
+  if (data.lives <= 0) { openNoLivesModal(true); return; }
+  startGame(currentDiff);
+}
 
 function buildBoard() {
   const board = document.getElementById('gameBoard');
@@ -1195,7 +2364,11 @@ async function onWin() {
   document.getElementById('finalScore').textContent = score.toLocaleString();
   document.getElementById('btnAgain').textContent = '🔄 เล่นอีกครั้ง';
   document.getElementById('myRankBadge').style.display = 'none';
+  // reset XP result box before showing
+  const xrb = document.getElementById('xpResultBox'); if(xrb) xrb.style.display='none';
   setTimeout(() => showScreen('result'), 800);
+  processXPGain(true, matched / 2);
+  onGamePlayed();
   await submitScore(score, currentDiff, true);
   await showMyRank(score, currentDiff);
 }
@@ -1208,7 +2381,11 @@ async function onLose() {
   document.getElementById('finalScore').textContent = score.toLocaleString();
   document.getElementById('btnAgain').textContent = '🔄 ลองใหม่';
   document.getElementById('myRankBadge').style.display = 'none';
+  const xrb2 = document.getElementById('xpResultBox'); if(xrb2) xrb2.style.display='none';
   showScreen('result');
+  processXPGain(false, matched / 2);
+  loseLife();
+  onGamePlayed();
   if (score > 0) {
     await submitScore(score, currentDiff, false);
     await showMyRank(score, currentDiff);
