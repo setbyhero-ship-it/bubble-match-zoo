@@ -369,6 +369,48 @@ body{background:#0b0b14;}
 /* ─────────────────────────────────────
    LEADERBOARD SCREEN
 ───────────────────────────────────── */
+/* ─────────────────────────────────────
+   PLAYER PROFILE SCREEN
+───────────────────────────────────── */
+#player-profile{z-index:10;padding:12px;justify-content:flex-start;overflow-y:auto;}
+.pp-card{width:100%;max-width:420px;border-radius:20px;overflow:hidden;background:rgba(8,8,22,.92);border:1px solid rgba(255,255,255,.1);backdrop-filter:blur(24px);}
+.pp-header{background:linear-gradient(135deg,rgba(99,102,241,.3) 0%,rgba(168,85,247,.2) 100%);padding:20px 20px 0;position:relative;}
+.pp-top{display:flex;gap:16px;align-items:flex-start;margin-bottom:16px;}
+.pp-avatar{width:76px;height:76px;border-radius:50%;background:rgba(99,102,241,.3);border:3px solid #818cf8;display:flex;align-items:center;justify-content:center;font-size:2.2rem;flex-shrink:0;overflow:hidden;}
+.pp-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.pp-info{flex:1;min-width:0;}
+.pp-name{font-size:1.15rem;font-weight:800;color:#fff;margin:0 0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pp-rank-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(255,200,0,.15);border:1px solid rgba(255,200,0,.3);border-radius:20px;padding:3px 10px;font-size:.72rem;font-weight:700;color:#ffd700;margin-bottom:8px;}
+.pp-xp-label{display:flex;justify-content:space-between;font-size:.68rem;color:rgba(255,255,255,.45);margin-bottom:4px;}
+.pp-xp-bar{height:7px;background:rgba(255,255,255,.1);border-radius:4px;overflow:hidden;}
+.pp-xp-fill{height:100%;background:linear-gradient(90deg,#a855f7,#6366f1);border-radius:4px;transition:width .6s ease;}
+.pp-lv-badge{position:absolute;top:14px;right:14px;background:linear-gradient(135deg,#6366f1,#a855f7);border-radius:10px;padding:6px 12px;text-align:center;min-width:52px;}
+.pp-lv-num{font-size:1.3rem;font-weight:900;color:#fff;line-height:1;}
+.pp-lv-txt{font-size:.58rem;color:rgba(255,255,255,.7);letter-spacing:.5px;}
+.pp-tabs{display:flex;border-bottom:1px solid rgba(255,255,255,.08);margin-top:4px;}
+.pp-tab{padding:10px 16px;font-size:.8rem;font-weight:600;color:rgba(255,255,255,.4);cursor:pointer;border-bottom:2px solid transparent;transition:.15s;}
+.pp-tab.active{color:#fff;border-bottom-color:#818cf8;}
+.pp-body{padding:14px;}
+.pp-streak-box{display:flex;align-items:center;gap:12px;background:rgba(251,146,60,.08);border:1px solid rgba(251,146,60,.2);border-radius:12px;padding:10px 14px;margin-bottom:12px;}
+.pp-streak-val{font-size:1.1rem;font-weight:900;color:#fb923c;}
+.pp-streak-lbl{font-size:.68rem;color:rgba(255,255,255,.4);}
+.pp-stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.pp-stat{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:10px 12px;}
+.pp-stat-icon{font-size:1.1rem;margin-bottom:2px;}
+.pp-stat-val{font-size:1rem;font-weight:800;color:#fff;}
+.pp-stat-lbl{font-size:.65rem;color:rgba(255,255,255,.38);}
+.pp-best-title{font-size:.68rem;color:rgba(255,255,255,.38);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;}
+.pp-diff-row{display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(255,255,255,.04);border-radius:9px;margin-bottom:5px;}
+.pp-diff-badge{font-size:.62rem;font-weight:700;padding:2px 8px;border-radius:20px;flex-shrink:0;}
+.pp-diff-score{font-size:.95rem;font-weight:800;margin-left:auto;color:#ffd700;}
+.pp-actions{display:flex;gap:8px;margin-top:12px;}
+.pp-btn-edit{flex:1;padding:10px;background:rgba(99,102,241,.2);border:1px solid rgba(99,102,241,.4);border-radius:50px;color:#818cf8;font-size:.82rem;font-weight:700;cursor:pointer;font-family:inherit;}
+.pp-btn-close{padding:10px 16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:50px;color:rgba(255,255,255,.5);font-size:.82rem;cursor:pointer;font-family:inherit;}
+
+.easy{background:rgba(34,197,94,.2);color:#4ade80;}
+.normal{background:rgba(99,102,241,.2);color:#818cf8;}
+.hard{background:rgba(249,115,22,.2);color:#fb923c;}
+.hell{background:rgba(239,68,68,.2);color:#f87171;}
 #leaderboard{z-index:10;padding:12px;justify-content:flex-start;gap:0;overflow:hidden;}
 .lb-header{
   width:100%;max-width:420px;display:flex;align-items:center;gap:10px;
@@ -824,7 +866,7 @@ input[type=file]{display:none;}
   <!-- User chip -->
   <button class="btn-sound" onclick="toggleSound()" style="position:absolute;top:12px;right:12px;background:rgba(5,5,18,.85);border:1.5px solid rgba(255,255,255,.2);border-radius:50%;width:36px;height:36px;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.4);">🔊</button>
   <div style="display:flex;gap:8px;align-items:center;width:100%;max-width:360px;justify-content:space-between;">
-    <div class="menu-user-chip" onclick="onEditProfile()">
+    <div class="menu-user-chip" onclick="showPlayerProfile()">
       <div class="menu-user-av" id="menuUserAv">🐸</div>
       <div>
         <div class="menu-user-name" id="menuUserName">ผู้เล่น</div>
@@ -937,6 +979,62 @@ input[type=file]{display:none;}
       <button class="btn-again" id="btnAgain" onclick="retryGame()">🔄 เล่นอีกครั้ง</button>
       <button class="btn-lb" onclick="openLeaderboard()">🏆 ดูอันดับ</button>
       <button class="btn-menu2" onclick="goMenu()">📋 เลือกด่าน</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PLAYER PROFILE ══ -->
+<div class="screen hidden" id="player-profile">
+  <div class="pp-card">
+    <div class="pp-header">
+      <div class="pp-top">
+        <div class="pp-avatar" id="ppAvatar">🐸</div>
+        <div class="pp-info">
+          <div class="pp-name" id="ppName">ผู้เล่น</div>
+          <div class="pp-rank-badge" id="ppRank">⭐ มือใหม่</div>
+          <div class="pp-xp-label"><span id="ppLvLabel">Lv.1</span><span id="ppXpNums">0 / 100 XP</span></div>
+          <div class="pp-xp-bar"><div class="pp-xp-fill" id="ppXpFill" style="width:0%"></div></div>
+        </div>
+      </div>
+      <div class="pp-lv-badge"><div class="pp-lv-num" id="ppLvNum">1</div><div class="pp-lv-txt">LEVEL</div></div>
+      <div class="pp-tabs">
+        <div class="pp-tab active" onclick="ppSwitchTab('stats',this)">สถิติ</div>
+        <div class="pp-tab" onclick="ppSwitchTab('best',this)">คะแนนสูงสุด</div>
+      </div>
+    </div>
+    <div class="pp-body">
+      <!-- TAB: สถิติ -->
+      <div id="ppTabStats">
+        <div class="pp-streak-box">
+          <div style="font-size:1.4rem">🔥</div>
+          <div>
+            <div class="pp-streak-val" id="ppStreakCur">0 วัน</div>
+            <div class="pp-streak-lbl">Streak ติดต่อกัน</div>
+          </div>
+          <div style="margin-left:auto;text-align:right;">
+            <div style="font-size:.68rem;color:rgba(255,255,255,.38)">สูงสุดเคยได้</div>
+            <div style="font-size:.88rem;font-weight:700;color:#fb923c" id="ppStreakMax">0 วัน</div>
+          </div>
+        </div>
+        <div class="pp-stats-grid">
+          <div class="pp-stat"><div class="pp-stat-icon">🎮</div><div class="pp-stat-val" id="ppGames">0</div><div class="pp-stat-lbl">เกมทั้งหมด</div></div>
+          <div class="pp-stat"><div class="pp-stat-icon">✅</div><div class="pp-stat-val" id="ppWins">0</div><div class="pp-stat-lbl">ชนะ</div></div>
+          <div class="pp-stat"><div class="pp-stat-icon">💀</div><div class="pp-stat-val" id="ppLosses">0</div><div class="pp-stat-lbl">แพ้</div></div>
+          <div class="pp-stat"><div class="pp-stat-icon">✨</div><div class="pp-stat-val" id="ppTotalXP">0</div><div class="pp-stat-lbl">XP รวม</div></div>
+        </div>
+      </div>
+      <!-- TAB: คะแนนสูงสุด -->
+      <div id="ppTabBest" style="display:none">
+        <div class="pp-best-title">คะแนนสูงสุดแต่ละระดับ</div>
+        <div class="pp-diff-row"><span class="pp-diff-badge easy">EASY</span><span style="font-size:.78rem;color:rgba(255,255,255,.55)">ง่าย</span><span class="pp-diff-score" id="ppBestEasy">—</span></div>
+        <div class="pp-diff-row"><span class="pp-diff-badge normal">NORMAL</span><span style="font-size:.78rem;color:rgba(255,255,255,.55)">ปกติ</span><span class="pp-diff-score" id="ppBestNormal">—</span></div>
+        <div class="pp-diff-row"><span class="pp-diff-badge hard">HARD</span><span style="font-size:.78rem;color:rgba(255,255,255,.55)">ยาก</span><span class="pp-diff-score" id="ppBestHard">—</span></div>
+        <div class="pp-diff-row"><span class="pp-diff-badge hell">HELL</span><span style="font-size:.78rem;color:rgba(255,255,255,.55)">นรก</span><span class="pp-diff-score" id="ppBestHell">—</span></div>
+      </div>
+      <div class="pp-actions">
+        <button class="pp-btn-edit" onclick="onEditProfile()">✏️ แก้ไขโปรไฟล์</button>
+        <button class="pp-btn-close" onclick="showMenu()">✕ ปิด</button>
+      </div>
     </div>
   </div>
 </div>
@@ -2125,6 +2223,85 @@ function fillProfileForm() {
 }
 
 // ══════════════════════════════════════════
+//  GAME STATS TRACKING
+// ══════════════════════════════════════════
+const STATS_KEY = 'bm_stats_v1';
+const DIFF_KEYS = ['easy','normal','hard','hell'];
+
+function loadStats() {
+  const def = {gamesPlayed:0, wins:0, losses:0, bestScores:{easy:0,normal:0,hard:0,hell:0}};
+  try { return {...def, ...JSON.parse(localStorage.getItem(STATS_KEY)||'{}')}; }
+  catch(e) { return def; }
+}
+function saveStats(d) { localStorage.setItem(STATS_KEY, JSON.stringify(d)); }
+
+function recordGameResult(isWin, diffIdx, score) {
+  const d = loadStats();
+  d.gamesPlayed++;
+  if (isWin) d.wins++; else d.losses++;
+  if (!d.bestScores) d.bestScores = {easy:0,normal:0,hard:0,hell:0};
+  const key = DIFF_KEYS[diffIdx] || 'easy';
+  if ((score||0) > (d.bestScores[key]||0)) d.bestScores[key] = score;
+  saveStats(d);
+}
+
+// ══════════════════════════════════════════
+//  PLAYER PROFILE SCREEN
+// ══════════════════════════════════════════
+function showPlayerProfile() {
+  if (!currentUser) { onEditProfile(); return; }
+  // XP data
+  const xpData  = loadXP();
+  const lv      = getLevelFromTotalXP(xpData.totalXp);
+  const rank    = getRankByLevel(lv);
+  const xpIn    = getXpIntoCurrentLevel(xpData.totalXp);
+  const xpNd    = getXpNeededThisLevel(xpData.totalXp);
+  const pct     = Math.min(100, (xpIn/xpNd)*100);
+  // Streak
+  const streak  = loadStreakData();
+  // Stats
+  const stats   = loadStats();
+
+  // Fill avatar
+  const avEl = document.getElementById('ppAvatar');
+  renderAvatar(avEl, currentUser);
+  document.getElementById('ppName').textContent    = currentUser.name;
+  document.getElementById('ppRank').textContent    = `${rank.icon} ${rank.name}`;
+  document.getElementById('ppLvNum').textContent   = lv;
+  document.getElementById('ppLvLabel').textContent = `Lv.${lv}`;
+  document.getElementById('ppXpNums').textContent  = `${xpIn.toLocaleString()} / ${xpNd.toLocaleString()} XP`;
+  document.getElementById('ppXpFill').style.width  = pct + '%';
+
+  // Streak
+  document.getElementById('ppStreakCur').textContent = `${streak.streak} วัน`;
+  document.getElementById('ppStreakMax').textContent = `${streak.longestStreak||0} วัน`;
+
+  // Stats
+  document.getElementById('ppGames').textContent   = stats.gamesPlayed.toLocaleString();
+  document.getElementById('ppWins').textContent    = stats.wins.toLocaleString();
+  document.getElementById('ppLosses').textContent  = stats.losses.toLocaleString();
+  document.getElementById('ppTotalXP').textContent = xpData.totalXp.toLocaleString();
+
+  // Best scores
+  const bs = stats.bestScores || {};
+  document.getElementById('ppBestEasy').textContent   = bs.easy   ? bs.easy.toLocaleString()   : '—';
+  document.getElementById('ppBestNormal').textContent = bs.normal ? bs.normal.toLocaleString() : '—';
+  document.getElementById('ppBestHard').textContent   = bs.hard   ? bs.hard.toLocaleString()   : '—';
+  document.getElementById('ppBestHell').textContent   = bs.hell   ? bs.hell.toLocaleString()   : '—';
+
+  // Reset tab
+  ppSwitchTab('stats', document.querySelector('.pp-tab'));
+  showScreen('player-profile');
+}
+
+function ppSwitchTab(tab, el) {
+  document.getElementById('ppTabStats').style.display = tab==='stats' ? '' : 'none';
+  document.getElementById('ppTabBest').style.display  = tab==='best'  ? '' : 'none';
+  document.querySelectorAll('.pp-tab').forEach(t => t.classList.remove('active'));
+  if (el) el.classList.add('active');
+}
+
+// ══════════════════════════════════════════
 //  SCORE SAVING
 // ══════════════════════════════════════════
 const SCORES_KEY = 'bm_scores_v1';
@@ -2494,6 +2671,7 @@ async function onWin() {
   setTimeout(() => showScreen('result'), 800);
   processXPGain(true, matched / 2);
   onGamePlayed();
+  recordGameResult(true, currentDiff, score);
   await submitScore(score, currentDiff, true);
   await showMyRank(score, currentDiff);
 }
@@ -2511,6 +2689,7 @@ async function onLose() {
   processXPGain(false, matched / 2);
   loseLife();
   onGamePlayed();
+  recordGameResult(false, currentDiff, score);
   if (score > 0) {
     await submitScore(score, currentDiff, false);
     await showMyRank(score, currentDiff);
