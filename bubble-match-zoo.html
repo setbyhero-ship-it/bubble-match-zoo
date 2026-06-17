@@ -22,6 +22,7 @@ const FIREBASE_CONFIG = {
 </script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 
 <style>
 /* ─────────────────────────────────────
@@ -115,6 +116,23 @@ body{background:#0b0b14;}
 .btn-start{display:block;width:100%;padding:14px;border:none;border-radius:50px;background:linear-gradient(135deg,#22dd44,#00aa22);color:#fff;font-size:1.1rem;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 6px 24px rgba(0,200,0,.4);transition:all .2s;position:relative;}
 .btn-start:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(0,200,0,.5);}
 .btn-start:active{transform:scale(.97);}
+.btn-google{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  width:100%;padding:13px;border:1.5px solid rgba(255,255,255,.15);border-radius:50px;
+  background:rgba(255,255,255,.08);color:#fff;font-size:.95rem;font-weight:700;
+  font-family:inherit;cursor:pointer;margin-top:10px;transition:all .2s;
+  backdrop-filter:blur(8px);
+}
+.btn-google:hover{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.3);transform:translateY(-1px);}
+.btn-google:active{transform:scale(.97);}
+.btn-google-icon{width:20px;height:20px;flex-shrink:0;}
+.btn-guest{
+  display:block;width:100%;padding:9px;border:none;border-radius:50px;
+  background:transparent;color:rgba(255,255,255,.4);font-size:.8rem;font-family:inherit;
+  cursor:pointer;margin-top:8px;transition:color .2s;
+}
+.btn-guest:hover{color:rgba(255,255,255,.7);}
+.splash-auth-divider{color:rgba(255,255,255,.2);font-size:.72rem;margin:10px 0 2px;}
 .splash-bubbles{display:flex;justify-content:center;gap:10px;margin-bottom:20px;}
 .sp-b{width:44px;height:44px;border-radius:50%;position:relative;animation:floatIdle 2.5s ease-in-out infinite;}
 .sp-b::before{content:'';position:absolute;top:9%;left:17%;width:40%;height:33%;background:radial-gradient(ellipse,rgba(255,255,255,.75) 0%,transparent 100%);border-radius:50%;}
@@ -767,7 +785,12 @@ input[type=file]{display:none;}
       <div class="sp-b">🐸</div><div class="sp-b">🐱</div><div class="sp-b">🐰</div>
       <div class="sp-b">🐥</div><div class="sp-b">🦊</div>
     </div>
-    <button class="btn-start" onclick="onSplashStart()">🎮 เริ่มเล่น!</button>
+    <button class="btn-google" onclick="signInWithGoogle()">
+      <svg class="btn-google-icon" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+      เข้าสู่ระบบด้วย Google
+    </button>
+    <div class="splash-auth-divider">— หรือ —</div>
+    <button class="btn-guest" onclick="onSplashStart()">🎮 เล่นแบบผู้เยี่ยมชม</button>
   </div>
 </div>
 
@@ -797,11 +820,11 @@ input[type=file]{display:none;}
   <!-- User chip -->
   <button class="btn-sound" onclick="toggleSound()" style="position:absolute;top:12px;right:12px;background:rgba(5,5,18,.85);border:1.5px solid rgba(255,255,255,.2);border-radius:50%;width:36px;height:36px;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.4);">🔊</button>
   <div style="display:flex;gap:8px;align-items:center;width:100%;max-width:360px;justify-content:space-between;">
-    <div class="menu-user-chip" onclick="showScreen('profile')">
+    <div class="menu-user-chip" onclick="onEditProfile()">
       <div class="menu-user-av" id="menuUserAv">🐸</div>
       <div>
         <div class="menu-user-name" id="menuUserName">ผู้เล่น</div>
-        <div class="menu-user-edit">แตะเพื่อแก้ไข</div>
+        <div class="menu-user-edit" id="menuUserEdit">แตะเพื่อแก้ไข</div>
       </div>
     </div>
     <div class="streak-chip" id="streakChip" onclick="openStreakModal()">
@@ -1847,6 +1870,7 @@ function watchAdForLife() {
 //  FIREBASE INIT
 // ══════════════════════════════════════════
 let db = null;
+let auth = null;
 let firebaseReady = false;
 
 (function initFirebase() {
@@ -1854,8 +1878,13 @@ let firebaseReady = false;
     if (FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.apiKey !== 'PASTE_YOUR_API_KEY') {
       firebase.initializeApp(FIREBASE_CONFIG);
       db = firebase.firestore();
+      auth = firebase.auth();
       firebaseReady = true;
       console.log('✅ Firebase connected');
+      // ถ้า Google auth กลับมา redirect → จัดการ result
+      auth.getRedirectResult().then(result => {
+        if (result && result.user) handleAuthUser(result.user);
+      }).catch(e => console.warn('Redirect result:', e));
     } else {
       console.warn('⚠️ Firebase not configured — using local scores only');
     }
@@ -1915,6 +1944,53 @@ async function saveProfile() {
   };
   localStorage.setItem(USER_KEY, JSON.stringify(currentUser));
   showMenu();   // FIX: ใช้ showMenu() แทน showScreen เพื่อ init XP/lives/streak/spin ด้วย
+}
+
+// ── Google Sign-in ──────────────────────
+function signInWithGoogle() {
+  if (!auth) { alert('Firebase ยังไม่พร้อม'); return; }
+  const provider = new firebase.auth.GoogleAuthProvider();
+  provider.setCustomParameters({ prompt: 'select_account' });
+  // ใช้ popup บน desktop, redirect บน mobile
+  const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+  if (isMobile) {
+    auth.signInWithRedirect(provider);
+  } else {
+    auth.signInWithPopup(provider)
+      .then(result => handleAuthUser(result.user))
+      .catch(e => {
+        if (e.code !== 'auth/popup-closed-by-user') {
+          console.error('Google sign-in error:', e);
+          alert('เข้าสู่ระบบไม่สำเร็จ: ' + e.message);
+        }
+      });
+  }
+}
+
+function handleAuthUser(googleUser) {
+  // สร้าง currentUser จาก Google account
+  const prev = currentUser;
+  currentUser = {
+    id:          googleUser.uid,
+    name:        googleUser.displayName || 'ผู้เล่น',
+    avatar:      googleUser.photoURL   || '🐸',
+    avatarColor: 'b-green',
+    isCustom:    !!googleUser.photoURL,
+    isGoogle:    true,
+    email:       googleUser.email
+  };
+  // ถ้ามีชื่อ/avatar custom จาก localStorage เดิม ให้ถามว่าจะใช้ของ Google หรือเดิม
+  // ตอนนี้ใช้ Google เป็นหลัก
+  localStorage.setItem(USER_KEY, JSON.stringify(currentUser));
+  updateUserUI();
+  showMenu();
+}
+
+function signOut() {
+  if (auth) auth.signOut();
+  currentUser = null;
+  localStorage.removeItem(USER_KEY);
+  showScreen('splash');
 }
 
 function validateProfileForm() {
@@ -1981,10 +2057,10 @@ document.getElementById('avatarFileInput').addEventListener('change', function(e
 // ── Render user avatar anywhere ─────────
 function renderAvatar(containerEl, user) {
   if (!user) return;
-  if (user.isCustom && user.avatar.startsWith('data:')) {
-    containerEl.innerHTML = `<img src="${user.avatar}">`;
+  if (user.isCustom && user.avatar && (user.avatar.startsWith('data:') || user.avatar.startsWith('http'))) {
+    containerEl.innerHTML = `<img src="${user.avatar}" referrerpolicy="no-referrer">`;
   } else {
-    containerEl.textContent = user.avatar;
+    containerEl.textContent = user.avatar || '🐸';
   }
 }
 
@@ -1994,10 +2070,23 @@ function updateUserUI() {
   const menuAv = document.getElementById('menuUserAv');
   renderAvatar(menuAv, currentUser);
   document.getElementById('menuUserName').textContent = currentUser.name;
+  const editLabel = document.getElementById('menuUserEdit');
+  if (editLabel) editLabel.textContent = currentUser.isGoogle ? '🔵 Google Account' : 'แตะเพื่อแก้ไข';
   // Game header
   const ghAv = document.getElementById('ghAv');
   renderAvatar(ghAv, currentUser);
   document.getElementById('ghName').textContent = currentUser.name;
+}
+
+function onEditProfile() {
+  if (currentUser?.isGoogle) {
+    // Google user — แสดง popup options
+    const choice = confirm(`สวัสดี ${currentUser.name}!\n\nกด OK เพื่อ Sign Out\nกด Cancel เพื่อปิด`);
+    if (choice) signOut();
+  } else {
+    fillProfileForm();
+    showScreen('profile');
+  }
 }
 
 // ── Fill profile form for editing ───────
@@ -2136,8 +2225,8 @@ function renderLB() {
     const diffStyle = diffColors[s.diffName] || '';
 
     let avHTML = '';
-    if (s.isCustomAvatar && s.avatar && s.avatar.startsWith('data:')) {
-      avHTML = `<img src="${s.avatar}">`;
+    if (s.isCustomAvatar && s.avatar && (s.avatar.startsWith('data:') || s.avatar.startsWith('http'))) {
+      avHTML = `<img src="${s.avatar}" referrerpolicy="no-referrer">`;
     } else {
       avHTML = s.avatar || '🐸';
     }
