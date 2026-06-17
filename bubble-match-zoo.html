@@ -787,6 +787,7 @@ input[type=file]{display:none;}
     <label class="av-upload-btn" for="avatarFileInput">📷 อัปโหลดรูป</label>
     <!-- Name -->
     <input class="name-input" type="text" id="profileNameInput" placeholder="ใส่ชื่อของคุณ..." maxlength="16" oninput="validateProfileForm()">
+    <div id="nameErrorMsg" style="color:#ff6b6b;font-size:.82rem;font-weight:700;margin:-8px 0 10px;min-height:18px;text-align:center;"></div>
     <button class="btn-save-profile" id="btnSaveProfile" onclick="saveProfile()" disabled>✅ บันทึกและเล่น!</button>
   </div>
 </div>
@@ -1880,9 +1881,29 @@ function loadUser() {
   currentUser = u ? JSON.parse(u) : null;
 }
 
-function saveProfile() {
+async function saveProfile() {
   const name = document.getElementById('profileNameInput').value.trim();
   if (!name) return;
+  const btn = document.getElementById('btnSaveProfile');
+  const errEl = document.getElementById('nameErrorMsg');
+  errEl.textContent = '';
+
+  // ตรวจชื่อซ้ำใน Firestore (ยกเว้นถ้าเป็นชื่อของตัวเองอยู่แล้ว)
+  if (firebaseReady && db && name !== currentUser?.name) {
+    btn.disabled = true;
+    btn.textContent = '⏳ กำลังตรวจสอบ...';
+    try {
+      const snap = await db.collection('scores').where('name', '==', name).limit(1).get();
+      if (!snap.empty && snap.docs[0].data().userId !== currentUser?.id) {
+        errEl.textContent = '⚠️ ชื่อนี้ถูกใช้แล้ว กรุณาใช้ชื่ออื่น';
+        btn.disabled = false;
+        btn.textContent = '✅ บันทึกและเล่น!';
+        return;
+      }
+    } catch(e) { console.error('Name check error:', e); }
+    btn.textContent = '✅ บันทึกและเล่น!';
+  }
+
   const avatar = customAvatarB64 || selectedEmoji;
   const avatarColor = customAvatarB64 ? '' : selectedColor;
   currentUser = {
@@ -1898,6 +1919,8 @@ function saveProfile() {
 
 function validateProfileForm() {
   const name = document.getElementById('profileNameInput').value.trim();
+  const errEl = document.getElementById('nameErrorMsg');
+  if (errEl) errEl.textContent = '';
   document.getElementById('btnSaveProfile').disabled = name.length < 1;
 }
 
@@ -2087,10 +2110,11 @@ function renderLB() {
   const list = document.getElementById('lbList');
   let data = lbData;
   if (lbFilter !== 'all') data = data.filter(s => s.diffName === lbFilter);
-  // Deduplicate: เก็บเฉพาะ score สูงสุดของแต่ละ user
+  // Deduplicate: เก็บเฉพาะ score สูงสุดของแต่ละชื่อ (กัน local+web ซ้ำ)
   const best = new Map();
   data.forEach(s => {
-    if (!best.has(s.userId) || best.get(s.userId).score < s.score) best.set(s.userId, s);
+    const key = (s.name || '').toLowerCase();
+    if (!best.has(key) || best.get(key).score < s.score) best.set(key, s);
   });
   data = Array.from(best.values()).sort((a, b) => b.score - a.score);
   // Top 100
