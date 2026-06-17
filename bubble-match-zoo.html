@@ -2496,6 +2496,7 @@ let cards = [], flipped = [], matched = 0;
 let timeLeft = 90, totalTime = 90;
 let timerInterval = null, frozen = false;
 let busy = false, currentDiff = 0, gameOver = false;
+let peekTimeout = null;
 let pupCharges = [2, 2, 1, 1];
 const PUP_INFO = [
   {icon:'⏱️', name:'เพิ่มเวลา', reward:'+ 15 วินาที!'},
@@ -2544,6 +2545,7 @@ function startGame(d) {
   if (!checkLivesBeforePlay(d)) return; // block ถ้าไม่มีชีวิต
   currentDiff = d; diff = DIFFS[d];
   score = 0; combo = 0; matched = 0; flipped = []; busy = false; frozen = false; gameOver = false;
+  if (peekTimeout) { clearTimeout(peekTimeout); peekTimeout = null; }
   pupCharges = [2, 2, 1, 1];
   updatePupUI(); updateScore(); updateUserUI(); updateXPUI(); updateLivesUI();
   showScreen('game');
@@ -2582,6 +2584,8 @@ function shuffle(a) {for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.rando
 
 function flipCard(i) {
   const c = cards[i];
+  // Safety: ถ้า busy ค้างอยู่โดยไม่มีการ์ดในคิว ให้รีเซต
+  if (busy && flipped.length === 0) { busy = false; }
   if (busy || c.matched || c.revealed || flipped.length === 2) return;
   c.revealed = true;
   playSound('flip');
@@ -2726,15 +2730,48 @@ function peekAllCards() {
   const overlay = document.createElement('div');
   overlay.className = 'peek-overlay';
   document.getElementById('effects').appendChild(overlay);
-  cards.forEach((c, i) => { if (!c.matched && !c.revealed) document.getElementById('card'+i).classList.add('flipped'); });
-  setTimeout(() => { cards.forEach((c, i) => { if (!c.matched && !c.revealed) document.getElementById('card'+i).classList.remove('flipped'); }); overlay.remove(); }, 1800);
+  // จำไว้ว่า peek เปิดการ์ดใด — cleanup จะปิดเฉพาะการ์ดเหล่านั้นเท่านั้น
+  const peekCards = [];
+  cards.forEach((c, i) => {
+    if (!c.matched && !c.revealed) {
+      document.getElementById('card'+i).classList.add('flipped');
+      peekCards.push(i);
+    }
+  });
+  if (peekTimeout) clearTimeout(peekTimeout);
+  peekTimeout = setTimeout(() => {
+    peekCards.forEach(i => {
+      // ปิดเฉพาะการ์ดที่ยังไม่ matched และผู้เล่นยังไม่ได้คลิก
+      if (!cards[i].matched && !cards[i].revealed)
+        document.getElementById('card'+i).classList.remove('flipped');
+    });
+    overlay.remove();
+    peekTimeout = null;
+  }, 1800);
 }
 function autoMatch() {
-  // รวบรวม index (หลัง shuffle) ของการ์ดที่ยังไม่ matched และไม่ได้เปิดอยู่
+  if (busy) return; // อย่าทำงานขณะกำลังเปรียบเทียบคู่
+  // ถ้ามีการ์ดพลิกไปแล้ว 1 ใบ (flipped[0]) ให้หาคู่ของมันก่อน
+  if (flipped.length === 1) {
+    const a = flipped[0];
+    for (let i = 0; i < cards.length; i++) {
+      if (i !== a && !cards[i].matched && !cards[i].revealed && cards[i].emoji === cards[a].emoji) {
+        busy = true;
+        cards[i].revealed = true;
+        document.getElementById('card'+i).classList.add('flipped');
+        setTimeout(() => onMatch(a, i), 600);
+        return;
+      }
+    }
+    // ไม่พบคู่ (ไม่ควรเกิดในเกมปกติ) — รีเซตการ์ดที่ค้างไว้
+    cards[a].revealed = false;
+    document.getElementById('card'+a).classList.remove('flipped');
+    flipped = [];
+  }
+  // หาคู่ใหม่จากการ์ดที่ยังไม่ได้เปิด
   const available = [];
   cards.forEach((c, i) => { if (!c.matched && !c.revealed) available.push(i); });
   if (available.length < 2) return;
-  // หาคู่ที่ emoji ตรงกัน
   for (let i = 0; i < available.length; i++) {
     for (let j = i + 1; j < available.length; j++) {
       if (cards[available[i]].emoji === cards[available[j]].emoji) {
