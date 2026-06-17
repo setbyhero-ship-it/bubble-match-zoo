@@ -797,8 +797,8 @@ input[type=file]{display:none;}
 <!-- ══ PROFILE SETUP ══ -->
 <div class="screen hidden" id="profile">
   <div class="profile-card">
-    <div class="profile-title">✨ สร้างโปรไฟล์</div>
-    <div class="profile-sub">ใส่ชื่อและเลือกอวตาร์ของคุณ</div>
+    <div class="profile-title" id="profileTitle">✨ สร้างโปรไฟล์</div>
+    <div class="profile-sub" id="profileSub">ใส่ชื่อและเลือกอวตาร์ของคุณ</div>
     <!-- Avatar preview -->
     <div class="av-preview" id="avPreview" onclick="openAvatarPicker()">
       <span id="avPreviewContent">🐸</span>
@@ -812,6 +812,7 @@ input[type=file]{display:none;}
     <input class="name-input" type="text" id="profileNameInput" placeholder="ใส่ชื่อของคุณ..." maxlength="16" oninput="validateProfileForm()">
     <div id="nameErrorMsg" style="color:#ff6b6b;font-size:.82rem;font-weight:700;margin:-8px 0 10px;min-height:18px;text-align:center;"></div>
     <button class="btn-save-profile" id="btnSaveProfile" onclick="saveProfile()" disabled>✅ บันทึกและเล่น!</button>
+    <button id="btnSignOut" onclick="signOut()" style="display:none;margin-top:8px;width:100%;padding:10px;border:1.5px solid rgba(255,100,100,.3);border-radius:50px;background:transparent;color:rgba(255,120,120,.8);font-size:.85rem;font-family:inherit;cursor:pointer;">🚪 ออกจากระบบ Google</button>
   </div>
 </div>
 
@@ -1936,11 +1937,13 @@ async function saveProfile() {
   const avatar = customAvatarB64 || selectedEmoji;
   const avatarColor = customAvatarB64 ? '' : selectedColor;
   currentUser = {
-    id: currentUser?.id || 'user_' + Date.now(),
+    id:       currentUser?.id || 'user_' + Date.now(),
     name,
     avatar,
     avatarColor,
-    isCustom: !!customAvatarB64
+    isCustom: !!customAvatarB64,
+    isGoogle: currentUser?.isGoogle || false,
+    email:    currentUser?.email    || ''
   };
   localStorage.setItem(USER_KEY, JSON.stringify(currentUser));
   showMenu();   // FIX: ใช้ showMenu() แทน showScreen เพื่อ init XP/lives/streak/spin ด้วย
@@ -2079,25 +2082,29 @@ function updateUserUI() {
 }
 
 function onEditProfile() {
-  if (currentUser?.isGoogle) {
-    // Google user — แสดง popup options
-    const choice = confirm(`สวัสดี ${currentUser.name}!\n\nกด OK เพื่อ Sign Out\nกด Cancel เพื่อปิด`);
-    if (choice) signOut();
-  } else {
-    fillProfileForm();
-    showScreen('profile');
-  }
+  fillProfileForm();
+  showScreen('profile');
 }
 
 // ── Fill profile form for editing ───────
 function fillProfileForm() {
+  const isGoogle = currentUser?.isGoogle;
+  // อัปเดต title/sub ตาม context
+  document.getElementById('profileTitle').textContent = currentUser ? '✏️ แก้ไขโปรไฟล์' : '✨ สร้างโปรไฟล์';
+  document.getElementById('profileSub').textContent   = isGoogle
+    ? `🔵 ${currentUser.email || 'Google Account'}`
+    : 'ใส่ชื่อและเลือกอวตาร์ของคุณ';
+  const signOutBtn = document.getElementById('btnSignOut');
+  if (signOutBtn) signOutBtn.style.display = isGoogle ? 'block' : 'none';
+
   // FIX: set state ก่อน build grid ครั้งเดียว เพื่อให้ highlight ถูกต้อง
   if (currentUser) {
     document.getElementById('profileNameInput').value = currentUser.name;
-    if (currentUser.isCustom) {
+    // Google photo URL → ใช้ emoji แทนใน editor
+    if (currentUser.isCustom && currentUser.avatar && currentUser.avatar.startsWith('data:')) {
       customAvatarB64 = currentUser.avatar;
     } else {
-      selectedEmoji = currentUser.avatar;
+      selectedEmoji = (currentUser.avatar && !currentUser.avatar.startsWith('http')) ? currentUser.avatar : '🐸';
       selectedColor = currentUser.avatarColor || 'b-green';
       customAvatarB64 = null;
     }
