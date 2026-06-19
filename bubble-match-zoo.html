@@ -346,6 +346,7 @@ body{background:#0b0b14;}
    ใช้ state machine เดียวกับการ์ดคลาสสิก (flipCard/onMatch/onMiss)
    แค่ override การแสดงผลให้ไม่หมุน 3D และไฮไลต์ตอนเลือกแทน
 ───────────────────────────────────── */
+.card.spot-tile{touch-action:manipulation;}
 .card.spot-tile.flipped{transform:none !important;}
 .spot-face{position:absolute;inset:0;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:transform .15s,box-shadow .15s,filter .15s;}
 .card.spot-tile.flipped .spot-face{transform:scale(1.12);box-shadow:0 0 0 3px #fff,0 0 20px rgba(255,255,255,.75);filter:brightness(1.18);}
@@ -2650,6 +2651,7 @@ let busy = false, currentDiff = 0, gameOver = false, paused = false;
 let idleHintTimer = null, idleHintTiles = [];
 let gameMode = 'spot'; // มีโหมดเดียว: ฝึกสายตา (จับคู่แบบเชื่อมเส้นสไตล์โอเน็ต)
 let spotSelected = null;  // index การ์ดที่เลือกไว้
+let dragFrom = null, dragJustFired = false; // ลากนิ้ว/เมาส์จากการ์ดหนึ่งไปอีกการ์ดเพื่อจับคู่โดยไม่ต้องแตะ 2 ครั้ง
 let spotGrid = [];        // ตารางตำแหน่ง (มีขอบรอบ) ใช้หาเส้นทางเชื่อม
 let pupCharges = [2, 3, 1, 1, 2];
 const COMBO_TEXTS = ['','Nice! 👍','Great! 🎉','Awesome! 🔥','PERFECT! 💥','GOD TIER! 🌟'];
@@ -2732,7 +2734,7 @@ function buildBoard() {
     wrap.className = 'card-wrap';
     if (isSpot) {
       // โหมดฝึกสายตา: หน้าเดียว เปิดเผยตลอด ไม่มีการพลิก 3D — แตะคู่ที่ "เชื่อมเส้นถึงกันได้"
-      wrap.innerHTML = `<div class="card spot-tile${c.special ? ' special-tile' : ''}" id="card${i}" onclick="spotPick(${i})">
+      wrap.innerHTML = `<div class="card spot-tile${c.special ? ' special-tile' : ''}" id="card${i}" onclick="spotPick(${i})" onpointerdown="spotPointerDown(${i})">
         <div class="card-face spot-face">
           <div class="bubble ${c.color}" style="position:absolute;inset:0;border-radius:50%;"></div>
           <span class="card-emoji">${c.emoji}</span>
@@ -2852,7 +2854,7 @@ function spotDrawPath(path, glowColor) {
 }
 
 function spotPick(i) {
-  if (gameOver || busy || paused) return;
+  if (gameOver || busy || paused || dragJustFired) return;
   resetIdleHint();
   const c = cards[i];
   if (c.matched) return;
@@ -2898,6 +2900,29 @@ function spotPick(i) {
     }, 380);
   }
 }
+
+// ลากนิ้ว/เมาส์จากการ์ดหนึ่งไปวางบนอีกการ์ด เพื่อจับคู่ทันทีโดยไม่ต้องแตะ 2 ครั้ง
+// ใช้ตรรกะเดียวกับการแตะ 2 ครั้งทุกอย่าง (ผ่าน spotPick) จึงใช้ได้ทั้งคู่ที่อยู่ติดกันและคู่ที่เชื่อมเส้นได้แม้อยู่ไกลกัน
+function spotPointerDown(i) {
+  if (gameOver || busy || paused) return;
+  if (cards[i] && cards[i].matched) return;
+  dragFrom = i;
+}
+function spotPointerUp(e) {
+  if (dragFrom === null) return;
+  const fromIdx = dragFrom;
+  dragFrom = null;
+  const target = document.elementFromPoint(e.clientX, e.clientY);
+  const tileEl = target && target.closest ? target.closest('.spot-tile') : null;
+  if (!tileEl) return;
+  const toIdx = parseInt(tileEl.id.replace('card', ''), 10);
+  if (isNaN(toIdx) || toIdx === fromIdx) return; // ปล่อยที่จุดเดิม = แค่แตะธรรมดา ให้ onclick จัดการตามปกติ
+  if (spotSelected !== fromIdx) spotPick(fromIdx);
+  if (spotSelected === fromIdx) spotPick(toIdx);
+  dragJustFired = true;
+  setTimeout(() => { dragJustFired = false; }, 0);
+}
+document.addEventListener('pointerup', spotPointerUp);
 
 function spotOnMatch(a, b) {
   cards[a].matched = cards[b].matched = true;
