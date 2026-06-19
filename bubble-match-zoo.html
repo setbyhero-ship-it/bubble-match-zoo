@@ -102,9 +102,9 @@ body{background:#0b0b14;}
 #splash{z-index:10;}
 .splash-card{
   background:rgba(8,8,22,.82);border:1.5px solid rgba(255,255,255,.12);
-  border-radius:28px;padding:32px 36px;text-align:center;
+  border-radius:28px;padding:28px 24px;text-align:center;
   backdrop-filter:blur(20px);box-shadow:0 16px 48px rgba(0,0,0,.5);
-  position:relative;overflow:hidden;
+  position:relative;overflow:hidden;max-width:320px;width:92%;
   animation:splashIn .6s cubic-bezier(.175,.885,.32,1.275) both;
 }
 @keyframes splashIn{from{transform:scale(.7);opacity:0;}to{transform:scale(1);opacity:1;}}
@@ -113,7 +113,9 @@ body{background:#0b0b14;}
 @keyframes logoBounce{0%,100%{transform:translateY(0) scale(1);}50%{transform:translateY(-8px) scale(1.05);}}
 .splash-title{font-size:1.9rem;font-weight:900;margin-bottom:4px;background:linear-gradient(135deg,#fff 0%,#ffe066 35%,#ff88cc 65%,#88ccff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .splash-sub{font-size:.85rem;color:rgba(255,255,255,.5);margin-bottom:24px;}
-.btn-start{display:block;width:100%;padding:14px;border:none;border-radius:50px;background:linear-gradient(135deg,#22dd44,#00aa22);color:#fff;font-size:1.1rem;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 6px 24px rgba(0,200,0,.4);transition:all .2s;position:relative;}
+.btn-start{display:block;width:100%;padding:14px;border:none;border-radius:50px;background:linear-gradient(135deg,#22dd44,#00aa22);color:#fff;font-size:1.1rem;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 6px 24px rgba(0,200,0,.4);transition:all .2s;position:relative;overflow:hidden;}
+.btn-start::after{content:'';position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(120deg,transparent,rgba(255,255,255,.35),transparent);animation:btnShine 2.6s ease-in-out infinite;}
+@keyframes btnShine{0%{left:-60%;}100%{left:130%;}}
 .btn-start:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(0,200,0,.5);}
 .btn-start:active{transform:scale(.97);}
 .btn-google{
@@ -133,14 +135,15 @@ body{background:#0b0b14;}
 }
 .btn-guest:hover{color:rgba(255,255,255,.7);}
 .splash-auth-divider{color:rgba(255,255,255,.2);font-size:.72rem;margin:10px 0 2px;}
-.splash-bubbles{display:flex;justify-content:center;gap:10px;margin-bottom:20px;}
-.sp-b{width:44px;height:44px;border-radius:50%;position:relative;animation:floatIdle 2.5s ease-in-out infinite;}
-.sp-b::before{content:'';position:absolute;top:9%;left:17%;width:40%;height:33%;background:radial-gradient(ellipse,rgba(255,255,255,.75) 0%,transparent 100%);border-radius:50%;}
-.sp-b:nth-child(1){background:radial-gradient(circle at 35% 28%,#88ff66,#22cc00);box-shadow:0 5px 18px rgba(80,220,0,.5);animation-delay:0s;font-size:1.1rem;display:flex;align-items:center;justify-content:center;}
-.sp-b:nth-child(2){background:radial-gradient(circle at 35% 28%,#88ccff,#0077ff);box-shadow:0 5px 18px rgba(0,120,255,.5);animation-delay:.4s;font-size:1.1rem;display:flex;align-items:center;justify-content:center;}
-.sp-b:nth-child(3){background:radial-gradient(circle at 35% 28%,#ff99cc,#ff0077);box-shadow:0 5px 18px rgba(255,0,120,.5);animation-delay:.8s;font-size:1.1rem;display:flex;align-items:center;justify-content:center;}
-.sp-b:nth-child(4){background:radial-gradient(circle at 35% 28%,#fff066,#ffcc00);box-shadow:0 5px 18px rgba(255,200,0,.5);animation-delay:1.2s;font-size:1.1rem;display:flex;align-items:center;justify-content:center;}
-.sp-b:nth-child(5){background:radial-gradient(circle at 35% 28%,#dd88ff,#aa00ff);box-shadow:0 5px 18px rgba(160,0,255,.5);animation-delay:1.6s;font-size:1.1rem;display:flex;align-items:center;justify-content:center;}
+/* ตัวอย่างเกมเพลย์บนหน้าแรก — โชว์การจับคู่เชื่อมเส้นจริงๆ ให้เห็นก่อนเข้าเล่น */
+.splash-preview{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:14px 12px;margin-bottom:20px;position:relative;}
+.sp-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;position:relative;}
+.sp-tile{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.95rem;margin:0 auto;box-shadow:0 3px 8px rgba(0,0,0,.25);position:relative;animation:spTileFloat 2.5s ease-in-out infinite;}
+@keyframes spTileFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-3px);}}
+.sp-tile.glow{box-shadow:0 0 0 2px #fff,0 0 14px rgba(255,255,255,.7);}
+.sp-tile.legend{box-shadow:0 0 0 2px #ffe066,0 0 14px rgba(255,224,102,.7);}
+.sp-sparkle{position:absolute;top:-6px;right:-6px;font-size:.6rem;animation:twinkle 1.1s ease-in-out infinite;}
+.sp-line{position:absolute;left:12px;top:42px;width:calc(100% - 24px);height:50px;pointer-events:none;}
 
 /* ─────────────────────────────────────
    PROFILE SCREEN
@@ -232,40 +235,36 @@ body{background:#0b0b14;}
 .menu-user-name{font-size:.85rem;font-weight:900;color:#fff;}
 .menu-user-edit{font-size:.6rem;color:rgba(255,255,255,.35);margin-top:1px;}
 /* Menu title */
-.menu-title-wrap{background:rgba(5,5,18,.85);border:1.5px solid rgba(255,255,255,.15);border-radius:16px;padding:10px 20px;text-align:center;backdrop-filter:blur(16px);box-shadow:0 4px 16px rgba(0,0,0,.4);}
-.menu-title{font-size:1.05rem;font-weight:900;background:linear-gradient(135deg,#fff 0%,#ffe066 50%,#ff88cc 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:2px;}
-.menu-sub{font-size:.72rem;color:rgba(255,255,255,.6);margin-bottom:0;}
 .diff-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:360px;}
 .diff-card{
-  background:rgba(8,8,22,.82);border-radius:22px;padding:18px 12px;text-align:center;
-  border:1.5px solid rgba(255,255,255,.09);backdrop-filter:blur(20px);cursor:pointer;
-  position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s;
-  box-shadow:0 8px 28px rgba(0,0,0,.35);
+  background:var(--dcg);border-radius:22px;padding:18px 12px 14px;text-align:center;
+  border:1.5px solid rgba(255,255,255,.25);cursor:pointer;
+  position:relative;overflow:hidden;transition:transform .15s,box-shadow .15s;
+  box-shadow:0 8px 22px rgba(0,0,0,.28);
 }
-.diff-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--dc);border-radius:22px 22px 0 0;box-shadow:0 0 14px var(--dc);}
-.diff-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.04) 0%,transparent 60%);border-radius:22px;animation:shimmer 3s linear infinite;pointer-events:none;}
-@keyframes shimmer{0%{opacity:.6;}50%{opacity:1;}100%{opacity:.6;}}
-.diff-card:hover{transform:translateY(-3px);box-shadow:0 12px 36px rgba(0,0,0,.45);}
+.diff-card:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 12px 30px rgba(0,0,0,.35);}
 .diff-card:active{transform:scale(.97);}
-.dc-badge{display:inline-block;font-size:.55rem;font-weight:900;padding:2px 10px;border-radius:20px;margin-bottom:8px;text-transform:uppercase;letter-spacing:1.5px;background:rgba(var(--dcr),.18);color:var(--dc);border:1px solid rgba(var(--dcr),.3);}
-.dc-icon{font-size:2rem;margin:6px 0;}
-.dc-name{font-size:.95rem;font-weight:900;color:var(--dc);text-shadow:0 0 14px var(--dc);}
+.dc-badge{position:absolute;top:10px;left:10px;display:inline-block;font-size:.55rem;font-weight:900;padding:3px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:1.2px;background:rgba(255,255,255,.92);color:var(--dc);}
+.dc-icon{font-size:2.3rem;margin:20px 0 6px;display:block;filter:drop-shadow(0 4px 6px rgba(0,0,0,.22));animation:dcFloat 3s ease-in-out infinite;}
+@keyframes dcFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);}}
+.dc-name{font-size:1rem;font-weight:900;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.3);}
+.dc-stars{margin-top:5px;font-size:.7rem;letter-spacing:2px;color:rgba(255,255,255,.45);}
+.dc-stars .on{color:#ffe066;text-shadow:0 0 6px rgba(255,224,102,.85);}
 /* Leaderboard button */
 .btn-leaderboard{
   display:flex;align-items:center;justify-content:center;gap:8px;
   width:100%;max-width:360px;padding:13px;border-radius:50px;
-  background:rgba(180,120,0,.9);
-  border:2px solid #ffc832;color:#fff;
+  background:linear-gradient(120deg,#ffd76b,#ffae2e);
+  border:none;color:#5a3300;
   font-size:.95rem;font-weight:900;font-family:inherit;cursor:pointer;
-  transition:all .2s;box-shadow:0 4px 16px rgba(180,120,0,.5);
-  text-shadow:0 1px 3px rgba(0,0,0,.5);
+  transition:all .2s;box-shadow:0 6px 18px rgba(180,110,0,.4);
 }
-.btn-leaderboard:hover{background:rgba(210,150,0,.95);transform:translateY(-2px);}
+.btn-leaderboard:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(180,110,0,.5);}
 
 /* ─────────────────────────────────────
    GAME SCREEN
 ───────────────────────────────────── */
-#game{z-index:10;padding:10px;gap:8px;justify-content:flex-start;padding-top:14px;}
+#game{z-index:10;padding:10px;gap:8px;justify-content:flex-start;padding-top:14px;overflow-y:auto;}
 .game-header{
   width:100%;max-width:400px;display:flex;align-items:center;gap:8px;
   background:rgba(8,8,22,.75);border-radius:16px;padding:7px 12px;
@@ -288,15 +287,17 @@ body{background:#0b0b14;}
 .timer-ring svg{transform:rotate(-90deg);}
 .timer-circle{stroke-dasharray:120;stroke-dashoffset:0;transition:stroke-dashoffset .5s linear,stroke .5s;}
 .timer-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:900;color:#fff;}
-.powerup-bar{width:100%;max-width:400px;display:flex;gap:6px;justify-content:center;}
-.pup-btn{flex:1;background:rgba(8,8,22,.75);border:1.5px solid rgba(255,255,255,.1);border-radius:12px;padding:6px 4px;text-align:center;cursor:pointer;backdrop-filter:blur(12px);transition:all .2s;position:relative;max-width:88px;}
+.powerup-bar{width:100%;max-width:420px;display:flex;gap:5px;justify-content:center;}
+.pup-btn{flex:1;background:rgba(8,8,22,.75);border:1.5px solid rgba(255,255,255,.1);border-radius:12px;padding:6px 3px;text-align:center;cursor:pointer;backdrop-filter:blur(12px);transition:all .2s;position:relative;max-width:76px;}
 .pup-btn:hover{border-color:rgba(255,255,255,.25);transform:translateY(-2px);}
 .pup-btn:active{transform:scale(.95);}
 .pup-btn.used{opacity:.35;pointer-events:none;}
-.pup-icon{font-size:1.1rem;margin-bottom:2px;}
-.pup-name{font-size:.52rem;font-weight:800;color:rgba(255,255,255,.7);}
+.pup-icon{font-size:1rem;margin-bottom:2px;}
+.pup-name{font-size:.46rem;font-weight:800;color:rgba(255,255,255,.7);}
 .pup-charges{position:absolute;top:-5px;right:-5px;width:17px;height:17px;border-radius:50%;background:#ff4444;color:#fff;font-size:.58rem;font-weight:900;display:flex;align-items:center;justify-content:center;border:2px solid rgba(8,8,22,.8);}
-.game-board{display:grid;gap:7px;width:100%;max-width:400px;padding:4px;}
+.game-board{display:grid;gap:7px;width:100%;padding:4px;}
+.game-board-wrap{position:relative;width:100%;max-width:400px;margin:0 auto;}
+.connect-svg{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:visible;z-index:5;}
 
 /* ─────────────────────────────────────
    CARD STYLES
@@ -313,7 +314,7 @@ body{background:#0b0b14;}
 .bubble{position:absolute;inset:0;border-radius:50%;}
 .bubble::before{content:'';position:absolute;top:9%;left:17%;width:42%;height:36%;background:radial-gradient(ellipse,rgba(255,255,255,.78) 0%,transparent 100%);border-radius:50%;z-index:2;}
 .bubble::after{content:'';position:absolute;bottom:10%;left:25%;right:25%;height:20%;background:radial-gradient(ellipse,rgba(255,255,255,.18) 0%,transparent 100%);border-radius:50%;}
-.card-emoji{font-size:1.3em;position:relative;z-index:3;}
+.card-emoji{font-size:1.55em;position:relative;z-index:3;}
 .b-green{background:radial-gradient(circle at 35% 28%,#88ff66,#22cc00);box-shadow:0 6px 20px rgba(80,220,0,.5),inset 0 -3px 6px rgba(0,80,0,.2);}
 .b-blue{background:radial-gradient(circle at 35% 28%,#88ccff,#0077ff);box-shadow:0 6px 20px rgba(0,120,255,.5),inset 0 -3px 6px rgba(0,0,100,.2);}
 .b-purple{background:radial-gradient(circle at 35% 28%,#dd88ff,#aa00ff);box-shadow:0 6px 20px rgba(160,0,255,.5),inset 0 -3px 6px rgba(60,0,80,.2);}
@@ -326,12 +327,52 @@ body{background:#0b0b14;}
 .b-sky{background:radial-gradient(circle at 35% 28%,#aaeeff,#0099cc);box-shadow:0 6px 20px rgba(0,160,200,.5),inset 0 -3px 6px rgba(0,40,70,.2);}
 .b-rose{background:radial-gradient(circle at 35% 28%,#ffaaaa,#ff4466);box-shadow:0 6px 20px rgba(255,60,100,.5),inset 0 -3px 6px rgba(80,0,20,.2);}
 .b-gold{background:radial-gradient(circle at 35% 28%,#ffe0a0,#e0a000);box-shadow:0 6px 20px rgba(220,160,0,.5),inset 0 -3px 6px rgba(60,40,0,.2);}
+/* สัตว์พิเศษระดับเทพนิยาย/ตำนาน — โทนสีและประกายแสงโดดเด่นกว่าสัตว์ทั่วไป */
+.b-dragon{background:radial-gradient(circle at 35% 28%,#33ffaa,#0a3d2e 70%,#000 100%);box-shadow:0 0 22px 4px #22ff99,0 6px 20px rgba(0,0,0,.6),inset 0 -3px 6px rgba(0,40,20,.4);}
+.b-trex{background:radial-gradient(circle at 35% 28%,#ffcc66,#cc3300 70%,#330600 100%);box-shadow:0 0 22px 4px #ff7733,0 6px 20px rgba(80,0,0,.5),inset 0 -3px 6px rgba(60,10,0,.3);}
+.b-saur{background:radial-gradient(circle at 35% 28%,#aaffaa,#1a661a 70%,#063006 100%);box-shadow:0 0 22px 4px #55dd55,0 6px 20px rgba(0,40,0,.5),inset 0 -3px 6px rgba(0,30,0,.3);}
+.b-unicorn{background:radial-gradient(circle at 35% 28%,#ffffff,#ff99ff 45%,#9933ff 100%);box-shadow:0 0 22px 4px #ff99ff,0 6px 20px rgba(150,0,255,.4),inset 0 -3px 6px rgba(80,0,100,.2);}
+.b-mermaid{background:radial-gradient(circle at 35% 28%,#aaffee,#1199cc 60%,#0a3355 100%);box-shadow:0 0 22px 4px #33eeff,0 6px 20px rgba(0,80,120,.5),inset 0 -3px 6px rgba(0,30,50,.3);}
+.b-fairy{background:radial-gradient(circle at 35% 28%,#ffccee,#ff66cc 55%,#7a0055 100%);box-shadow:0 0 22px 4px #ff66dd,0 6px 20px rgba(120,0,80,.5),inset 0 -3px 6px rgba(60,0,40,.3);}
 .card.shake{animation:shake .4s ease-in-out;}
 @keyframes shake{0%,100%{transform:rotateY(180deg) translateX(0);}25%{transform:rotateY(180deg) translateX(-5px);}75%{transform:rotateY(180deg) translateX(5px);}}
 .card.matched .card-front{animation:floatIdle 2.5s ease-in-out infinite;opacity:.7;}
 @keyframes floatIdle{0%,100%{transform:rotateY(180deg) translateY(0);}50%{transform:rotateY(180deg) translateY(-4px);}}
 @keyframes popIn{from{transform:rotateY(180deg) scale(.7);}to{transform:rotateY(180deg) scale(1);}}
 .card.pop-in .card-front{animation:popIn .3s cubic-bezier(.175,.885,.32,1.275);}
+
+/* ─────────────────────────────────────
+   SPOT-MODE TILES (จับคู่ฝึกสายตา) — เปิดเผยตลอด ไม่มีพลิก
+   ใช้ state machine เดียวกับการ์ดคลาสสิก (flipCard/onMatch/onMiss)
+   แค่ override การแสดงผลให้ไม่หมุน 3D และไฮไลต์ตอนเลือกแทน
+───────────────────────────────────── */
+.card.spot-tile.flipped{transform:none !important;}
+.spot-face{position:absolute;inset:0;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:transform .15s,box-shadow .15s,filter .15s;}
+.card.spot-tile.flipped .spot-face{transform:scale(1.12);box-shadow:0 0 0 3px #fff,0 0 20px rgba(255,255,255,.75);filter:brightness(1.18);}
+.card.spot-tile.shake{animation:spotShake .4s ease-in-out;}
+@keyframes spotShake{0%,100%{transform:translateX(0) rotate(0);}25%{transform:translateX(-6px) rotate(-4deg);}75%{transform:translateX(6px) rotate(4deg);}}
+.card.spot-tile.matched{pointer-events:none;}
+.card.spot-tile.matched .spot-face{animation:spotClear .35s ease-in forwards;}
+@keyframes spotClear{0%{transform:scale(1);opacity:1;}100%{transform:scale(0) rotate(20deg);opacity:0;}}
+.card.spot-tile.pop-in .spot-face{animation:spotPopIn .25s cubic-bezier(.175,.885,.32,1.275);}
+@keyframes spotPopIn{from{transform:scale(.85);}to{transform:scale(1);}}
+
+/* คำใบ้ — ไฮไลต์คู่ที่จับได้ชั่วคราว */
+.card.spot-tile.hint-glow .spot-face{animation:hintPulse .6s ease-in-out infinite;}
+@keyframes hintPulse{0%,100%{box-shadow:0 0 0 3px #fff066,0 0 18px rgba(255,240,102,.8);}50%{box-shadow:0 0 0 3px #fff,0 0 30px rgba(255,240,102,1);}}
+
+/* การ์ดพิเศษ/บอนัส — สัตว์ในตำนานเรืองแสงทอง-ม่วง ตัวใหญ่กว่าปกติ คะแนนพิเศษ x3 */
+.card.spot-tile.special-tile:not(.matched) .spot-face{animation:legendaryAura 1.4s ease-in-out infinite;}
+@keyframes legendaryAura{0%,100%{box-shadow:0 0 0 3px #ffe066,0 0 16px 4px rgba(255,224,102,.7),0 0 30px 8px rgba(180,80,255,.35);}50%{box-shadow:0 0 0 3px #fff0a0,0 0 26px 8px rgba(255,224,102,.9),0 0 46px 14px rgba(180,80,255,.55);}}
+.card.spot-tile.special-tile .card-emoji{font-size:2em;filter:drop-shadow(0 0 6px rgba(255,255,255,.7));}
+.card.spot-tile.special-tile .bonus-sparkle{position:absolute;top:-5px;right:-5px;font-size:1.1em;z-index:4;animation:twinkle 1.1s ease-in-out infinite;filter:drop-shadow(0 0 4px #fff);}
+@keyframes twinkle{0%,100%{transform:scale(1) rotate(0);opacity:1;}50%{transform:scale(1.3) rotate(20deg);opacity:.7;}}
+
+/* หยุดเกมชั่วคราว */
+#pause-modal{position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .3s;}
+#pause-modal.show{opacity:1;pointer-events:all;}
+.pause-btn-resume{width:100%;padding:12px;border:none;border-radius:50px;background:linear-gradient(135deg,#22ee55,#0ea845);color:#04210f;font-size:.95rem;font-weight:900;font-family:inherit;cursor:pointer;}
+.pause-btn-quit{display:block;width:100%;margin-top:10px;padding:10px;border:1.5px solid rgba(255,255,255,.15);border-radius:50px;background:none;color:rgba(255,255,255,.65);font-size:.85rem;font-weight:700;cursor:pointer;font-family:inherit;}
 
 /* ─────────────────────────────────────
    RESULT SCREEN
@@ -822,10 +863,21 @@ input[type=file]{display:none;}
   <div class="splash-card">
     <div class="splash-logo">🫧</div>
     <div class="splash-title">Bubble Match!</div>
-    <div class="splash-sub">Zoo Edition • จับคู่ฟองสบู่น่ารัก</div>
-    <div class="splash-bubbles">
-      <div class="sp-b">🐸</div><div class="sp-b">🐱</div><div class="sp-b">🐰</div>
-      <div class="sp-b">🐥</div><div class="sp-b">🦊</div>
+    <div class="splash-sub">Zoo Edition · จับคู่เชื่อมเส้นสไตล์โอเน็ต</div>
+    <div class="splash-preview">
+      <div class="sp-grid">
+        <div class="sp-tile" style="background:radial-gradient(circle at 35% 28%,#88ff66,#22cc00);">🐸</div>
+        <div class="sp-tile" style="background:radial-gradient(circle at 35% 28%,#88ccff,#0077ff);">🐱</div>
+        <div class="sp-tile glow" style="background:radial-gradient(circle at 35% 28%,#ff99cc,#ff4477);">🐰</div>
+        <div class="sp-tile" style="background:radial-gradient(circle at 35% 28%,#fff066,#ffcc00);">🐥</div>
+        <div class="sp-tile legend" style="background:radial-gradient(circle at 35% 28%,#33ffaa,#0a3d2e 70%,#000);">🐉<span class="sp-sparkle">✨</span></div>
+        <div class="sp-tile" style="background:radial-gradient(circle at 35% 28%,#dd88ff,#aa00ff);">🦊</div>
+        <div class="sp-tile" style="background:radial-gradient(circle at 35% 28%,#aaeeff,#0099cc);">🐢</div>
+        <div class="sp-tile glow" style="background:radial-gradient(circle at 35% 28%,#ff99cc,#ff4477);">🐰</div>
+      </div>
+      <svg class="sp-line" viewBox="0 0 300 80">
+        <polyline points="187,8 187,46 262,46" fill="none" stroke="#ff99cc" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity=".85"/>
+      </svg>
     </div>
     <button class="btn-start" onclick="onSplashStart()">🎮 เริ่มเล่น!</button>
   </div>
@@ -897,22 +949,22 @@ input[type=file]{display:none;}
     <div class="lives-hearts" id="livesHearts"></div>
     <div class="lives-regen" id="livesRegen"></div>
   </div>
-  <div class="menu-title-wrap">
-    <div class="menu-title">เลือกระดับความยาก</div>
-    <div class="menu-sub">จับคู่ฟองทั้งหมดก่อนเวลาหมด</div>
-  </div>
   <div class="diff-grid">
-    <div class="diff-card" style="--dc:#22ee55;--dcr:34,220,80" onclick="startGame(0)">
-      <div class="dc-badge">Easy</div><div class="dc-icon">🌱</div><div class="dc-name">ง่าย</div>
+    <div class="diff-card" style="--dc:#1d7a3d;--dcg:linear-gradient(160deg,#7be08a,#2fae5a);" onclick="startGame(0)">
+      <div class="dc-badge">Easy</div><div class="dc-icon">🐰</div><div class="dc-name">ง่าย</div>
+      <div class="dc-stars" id="dcStars0">☆☆☆</div>
     </div>
-    <div class="diff-card" style="--dc:#44aaff;--dcr:68,170,255" onclick="startGame(1)">
-      <div class="dc-badge">Normal</div><div class="dc-icon">🌸</div><div class="dc-name">ปกติ</div>
+    <div class="diff-card" style="--dc:#2057a8;--dcg:linear-gradient(160deg,#7fc2ff,#3f86e8);" onclick="startGame(1)">
+      <div class="dc-badge">Normal</div><div class="dc-icon">🦊</div><div class="dc-name">ปกติ</div>
+      <div class="dc-stars" id="dcStars1">☆☆☆</div>
     </div>
-    <div class="diff-card" style="--dc:#ff7722;--dcr:255,119,34" onclick="startGame(2)">
-      <div class="dc-badge">Hard</div><div class="dc-icon">🔥</div><div class="dc-name">ยาก</div>
+    <div class="diff-card" style="--dc:#a8420f;--dcg:linear-gradient(160deg,#ffb15c,#f0732a);" onclick="startGame(2)">
+      <div class="dc-badge">Hard</div><div class="dc-icon">🦁</div><div class="dc-name">ยาก</div>
+      <div class="dc-stars" id="dcStars2">☆☆☆</div>
     </div>
-    <div class="diff-card" style="--dc:#ee44cc;--dcr:220,60,200" onclick="startGame(3)">
-      <div class="dc-badge">Hell</div><div class="dc-icon">💀</div><div class="dc-name">นรก</div>
+    <div class="diff-card" style="--dc:#5a3da0;--dcg:linear-gradient(160deg,#b48cff,#7b4ce0);" onclick="startGame(3)">
+      <div class="dc-badge" style="background:rgba(0,0,0,.32);color:#fff;">Hell</div><div class="dc-icon">🐉</div><div class="dc-name">นรก</div>
+      <div class="dc-stars" id="dcStars3">☆☆☆</div>
     </div>
   </div>
   <button class="btn-spin" id="menuBtnSpin" onclick="openSpinModal()">
@@ -925,6 +977,7 @@ input[type=file]{display:none;}
 <div class="screen hidden" id="game">
   <div class="game-header">
     <button class="gh-btn" onclick="goMenu()">◀</button>
+    <button class="gh-btn" onclick="openPause()">⏸️</button>
     <button class="btn-sound gh-btn" onclick="toggleSound()">🔊</button>
     <div class="gh-user">
       <div class="gh-av" id="ghAv">🐸</div>
@@ -949,11 +1002,15 @@ input[type=file]{display:none;}
   </div>
   <div class="powerup-bar">
     <div class="pup-btn" id="pup0" onclick="usePowerup(0)"><div class="pup-icon">⏱️</div><div class="pup-name">เพิ่มเวลา</div><div class="pup-charges" id="pup0c">2</div></div>
-    <div class="pup-btn" id="pup1" onclick="usePowerup(1)"><div class="pup-icon">👁️</div><div class="pup-name">แอบดู</div><div class="pup-charges" id="pup1c">2</div></div>
+    <div class="pup-btn" id="pup1" onclick="usePowerup(1)"><div class="pup-icon">🔀</div><div class="pup-name">สลับภาพ</div><div class="pup-charges" id="pup1c">3</div></div>
     <div class="pup-btn" id="pup2" onclick="usePowerup(2)"><div class="pup-icon">💥</div><div class="pup-name">จับคู่ให้</div><div class="pup-charges" id="pup2c">1</div></div>
     <div class="pup-btn" id="pup3" onclick="usePowerup(3)"><div class="pup-icon">❄️</div><div class="pup-name">หยุดเวลา</div><div class="pup-charges" id="pup3c">1</div></div>
+    <div class="pup-btn" id="pup4" onclick="usePowerup(4)"><div class="pup-icon">💡</div><div class="pup-name">คำใบ้</div><div class="pup-charges" id="pup4c">2</div></div>
   </div>
-  <div class="game-board" id="gameBoard"></div>
+  <div class="game-board-wrap" id="gameBoardWrap">
+    <div class="game-board" id="gameBoard"></div>
+    <svg id="connectSvg" class="connect-svg"></svg>
+  </div>
 </div>
 
 <!-- ══ RESULT ══ -->
@@ -1134,6 +1191,17 @@ input[type=file]{display:none;}
   </div>
 </div>
 
+<!-- ══ PAUSE MODAL ══ -->
+<div id="pause-modal">
+  <div class="ad-card">
+    <div class="ad-icon">⏸️</div>
+    <div class="ad-title">หยุดเกมชั่วคราว</div>
+    <div class="ad-desc">คะแนนปัจจุบัน <b id="pauseScoreVal">0</b> — เวลาที่เหลือถูกหยุดไว้ พักได้ตามสบาย</div>
+    <button class="pause-btn-resume" onclick="resumeFromPause()">▶️ เล่นต่อ</button>
+    <button class="pause-btn-quit" onclick="quitFromPause()">🏠 กลับเมนู</button>
+  </div>
+</div>
+
 <script>
 // ══════════════════════════════════════════
 //  SOUND ENGINE (Web Audio API — ไม่ต้องโหลดไฟล์)
@@ -1211,6 +1279,15 @@ function playSound(type) {
         o.type = 'sine'; o.frequency.value = freq;
         g.gain.setValueAtTime(0.15, now + delay); g.gain.exponentialRampToValueAtTime(0.001, now + delay + 0.1);
         o.start(now + delay); o.stop(now + delay + 0.12);
+      });
+    } else if (type === 'legendary') {
+      // จับคู่สัตว์พิเศษระดับเทพนิยาย! — เสียงตื่นตามากกว่าปกติ
+      [[660,0],[880,0.08],[1100,0.16],[1320,0.24],[1760,0.34]].forEach(([freq, delay]) => {
+        const o = c.createOscillator(), g = c.createGain();
+        o.connect(g); g.connect(c.destination);
+        o.type = 'triangle'; o.frequency.value = freq;
+        g.gain.setValueAtTime(0.28, now + delay); g.gain.exponentialRampToValueAtTime(0.001, now + delay + 0.25);
+        o.start(now + delay); o.stop(now + delay + 0.28);
       });
     }
   } catch(e) { /* เสียงไม่รองรับก็ข้ามได้ */ }
@@ -2245,6 +2322,29 @@ function recordGameResult(isWin, diffIdx, score) {
   saveStats(d);
 }
 
+// คะแนนดาวต่อระดับความยาก (1-3 ดาว) อ้างอิงจากคะแนนสูงสุดที่เคยทำได้จริง — แสดงในการ์ดเลือกระดับความยากที่เมนู
+const DIFF_STAR_THRESHOLDS = [
+  [1, 600, 1200],
+  [1, 1200, 2400],
+  [1, 2200, 4000],
+  [1, 3500, 6000],
+];
+function updateDiffStars() {
+  const stats = loadStats();
+  const bs = stats.bestScores || {};
+  DIFF_KEYS.forEach((key, idx) => {
+    const el = document.getElementById('dcStars' + idx);
+    if (!el) return;
+    const score = bs[key] || 0;
+    const [t1, t2, t3] = DIFF_STAR_THRESHOLDS[idx];
+    let stars = 0;
+    if (score >= t1) stars = 1;
+    if (score >= t2) stars = 2;
+    if (score >= t3) stars = 3;
+    el.innerHTML = [1, 2, 3].map(n => `<span class="${n <= stars ? 'on' : ''}">${n <= stars ? '★' : '☆'}</span>`).join('');
+  });
+}
+
 // ══════════════════════════════════════════
 //  PLAYER PROFILE SCREEN
 // ══════════════════════════════════════════
@@ -2316,7 +2416,8 @@ async function submitScore(score, diffIdx, isWin) {
     avatarColor: currentUser.avatarColor || 'b-green',
     score,
     diffIdx,
-    diffName: DIFFS[diffIdx].name,
+    diffName: DIFFS_SPOT[diffIdx].name,
+    mode: gameMode,
     isWin,
     date: new Date().toLocaleDateString('th-TH'),
     ts: Date.now()
@@ -2487,6 +2588,56 @@ const DIFFS = [
   {cols:5, rows:4, pairs:10, time:60,  name:'ยาก'},
   {cols:6, rows:4, pairs:12, time:45,  name:'นรก'},
 ];
+// สัตว์น้อยชุดพิเศษสำหรับโหมด "จับคู่ฝึกสายตา" — มีหลากหลายชนิดกว่าโหมดปกติ
+// เพราะกระดานใหญ่ขึ้นมาก (สูงสุด 18 คู่) สไตล์ภาพยังเป็นบับเบิลเรืองแสงแบบเดิม
+const CARDS_SPOT = [
+  {emoji:'🐸', color:'b-green',  glow:'#88ff66'},
+  {emoji:'🐱', color:'b-blue',   glow:'#88ccff'},
+  {emoji:'🐰', color:'b-purple', glow:'#dd88ff'},
+  {emoji:'🦊', color:'b-orange', glow:'#ffd080'},
+  {emoji:'🐥', color:'b-yellow', glow:'#fff066'},
+  {emoji:'🐼', color:'b-pink',   glow:'#ff99cc'},
+  {emoji:'🐨', color:'b-teal',   glow:'#66ffee'},
+  {emoji:'🐯', color:'b-red',    glow:'#ff9999'},
+  {emoji:'🦋', color:'b-lime',   glow:'#ccff66'},
+  {emoji:'🐵', color:'b-sky',    glow:'#aaeeff'},
+  {emoji:'🐶', color:'b-rose',   glow:'#ffaaaa'},
+  {emoji:'🦁', color:'b-gold',   glow:'#ffe0a0'},
+  {emoji:'🐮', color:'b-green',  glow:'#88ff66'},
+  {emoji:'🐷', color:'b-blue',   glow:'#88ccff'},
+  {emoji:'🐔', color:'b-purple', glow:'#dd88ff'},
+  {emoji:'🐧', color:'b-orange', glow:'#ffd080'},
+  {emoji:'🦉', color:'b-yellow', glow:'#fff066'},
+  {emoji:'🐢', color:'b-pink',   glow:'#ff99cc'},
+  {emoji:'🦓', color:'b-teal',   glow:'#66ffee'},
+  {emoji:'🐘', color:'b-red',    glow:'#ff9999'},
+  {emoji:'🐺', color:'b-lime',   glow:'#ccff66'},
+  {emoji:'🦒', color:'b-sky',    glow:'#aaeeff'},
+  {emoji:'🦘', color:'b-rose',   glow:'#ffaaaa'},
+  {emoji:'🦔', color:'b-gold',   glow:'#ffe0a0'},
+  {emoji:'🐝', color:'b-green',  glow:'#88ff66'},
+  {emoji:'🦌', color:'b-blue',   glow:'#88ccff'},
+  {emoji:'🐳', color:'b-purple', glow:'#dd88ff'},
+  {emoji:'🦚', color:'b-orange', glow:'#ffd080'},
+];
+// สัตว์พิเศษระดับเทพนิยาย/ตำนาน — สุ่มแทนที่ 1 คู่ในกระดานทุกเกม สีสันโดดเด่น คะแนนพิเศษ x3
+const CARDS_LEGENDARY = [
+  {emoji:'🐉', color:'b-dragon',  glow:'#33ffaa'},
+  {emoji:'🦖', color:'b-trex',    glow:'#ff6622'},
+  {emoji:'🦕', color:'b-saur',    glow:'#55ff88'},
+  {emoji:'🦄', color:'b-unicorn', glow:'#ff99ff'},
+  {emoji:'🧜', color:'b-mermaid', glow:'#33eeff'},
+  {emoji:'🧚', color:'b-fairy',   glow:'#ff66dd'},
+];
+// โหมด "จับคู่ฝึกสายตา" — การ์ดเปิดเผยตลอด มองหาคู่ที่ "เชื่อมเส้นถึงกันได้" แล้วแตะ (สไตล์โอเน็ต)
+// ให้เวลาเพิ่มขึ้นจากเดิมเพราะกฎเชื่อมเส้นต้องคิดเส้นทางด้วย ไม่ใช่แค่หาคู่เฉยๆ
+// (cols*rows ต้อง = pairs*2 เสมอ — ง่ายคงจำนวนเท่าเดิม ระดับอื่นเพิ่มภาพขึ้น)
+const DIFFS_SPOT = [
+  {cols:4, rows:4, pairs:8,  time:60,  name:'ง่าย'},
+  {cols:6, rows:4, pairs:12, time:75,  name:'ปกติ'},
+  {cols:6, rows:6, pairs:18, time:105, name:'ยาก'},
+  {cols:6, rows:8, pairs:24, time:150, name:'นรก'},
+];
 
 // ══════════════════════════════════════════
 //  GAME STATE
@@ -2494,16 +2645,13 @@ const DIFFS = [
 let diff = 0, score = 0, combo = 0;
 let cards = [], flipped = [], matched = 0;
 let timeLeft = 90, totalTime = 90;
-let timerInterval = null, frozen = false;
-let busy = false, currentDiff = 0, gameOver = false;
-let peekTimeout = null;
-let pupCharges = [2, 2, 1, 1];
-const PUP_INFO = [
-  {icon:'⏱️', name:'เพิ่มเวลา', reward:'+ 15 วินาที!'},
-  {icon:'👁️', name:'แอบดู',    reward:'เปิดดูทั้งหมด 2 วิ'},
-  {icon:'💥', name:'จับคู่ให้', reward:'Auto จับคู่ 1 คู่!'},
-  {icon:'❄️', name:'หยุดเวลา', reward:'หยุดเวลา 5 วิ!'},
-];
+let timerInterval = null, frozen = false, freezeTimer = null, freezeStartedAt = 0, freezePausedRemaining = 0;
+let busy = false, currentDiff = 0, gameOver = false, paused = false;
+let idleHintTimer = null, idleHintTiles = [];
+let gameMode = 'spot'; // มีโหมดเดียว: ฝึกสายตา (จับคู่แบบเชื่อมเส้นสไตล์โอเน็ต)
+let spotSelected = null;  // index การ์ดที่เลือกไว้
+let spotGrid = [];        // ตารางตำแหน่ง (มีขอบรอบ) ใช้หาเส้นทางเชื่อม
+let pupCharges = [2, 3, 1, 1, 2];
 const COMBO_TEXTS = ['','Nice! 👍','Great! 🎉','Awesome! 🔥','PERFECT! 💥','GOD TIER! 🌟'];
 let adCallback = null, adTimer = null;
 
@@ -2523,6 +2671,7 @@ function showMenu() {
   updateUserUI(); updateStreakUI(); updateXPUI(); updateLivesUI();
   startLivesTimer();
   updateSpinButton();
+  updateDiffStars();
   showScreen('menu');
   // auto-open spin modal ครั้งแรกของวัน (หน่วง 600ms ให้ menu เล่น transition ก่อน)
   if (canSpinToday()) {
@@ -2530,7 +2679,7 @@ function showMenu() {
     showMenu._spinTimer = setTimeout(openSpinModal, 700);
   }
 }
-function goMenu()   { stopTimer(); showMenu(); }
+function goMenu()   { stopTimer(); stopIdleHint(); clearTimeout(freezeTimer); frozen = false; showMenu(); }
 
 function onSplashStart() {
   loadUser();
@@ -2543,10 +2692,10 @@ function onSplashStart() {
 // ══════════════════════════════════════════
 function startGame(d) {
   if (!checkLivesBeforePlay(d)) return; // block ถ้าไม่มีชีวิต
-  currentDiff = d; diff = DIFFS[d];
-  score = 0; combo = 0; matched = 0; flipped = []; busy = false; frozen = false; gameOver = false;
-  if (peekTimeout) { clearTimeout(peekTimeout); peekTimeout = null; }
-  pupCharges = [2, 2, 1, 1];
+  currentDiff = d; diff = DIFFS_SPOT[d];
+  score = 0; combo = 0; matched = 0; flipped = []; busy = false; frozen = false; gameOver = false; paused = false;
+  document.getElementById('pause-modal').classList.remove('show');
+  pupCharges = [2, 3, 1, 1, 2];
   updatePupUI(); updateScore(); updateUserUI(); updateXPUI(); updateLivesUI();
   showScreen('game');
   buildBoard();
@@ -2563,24 +2712,289 @@ function retryGame() {
 function buildBoard() {
   const board = document.getElementById('gameBoard');
   board.style.gridTemplateColumns = `repeat(${diff.cols}, 1fr)`;
-  const pool = [...CARDS].sort(() => Math.random() - .5).slice(0, diff.pairs);
+  const isSpot = gameMode === 'spot';
+  const sourceCards = isSpot ? CARDS_SPOT : CARDS;
+  const pool = [...sourceCards].sort(() => Math.random() - .5).slice(0, diff.pairs).map(c => ({...c}));
+  // สุ่มแทนที่ 1 คู่ต่อกระดานด้วย "สัตว์พิเศษระดับเทพนิยาย/ตำนาน" (โบนัสคะแนน x3) — เฉพาะโหมดฝึกสายตา
+  if (isSpot && pool.length) {
+    const slot = Math.floor(Math.random() * pool.length);
+    const legend = CARDS_LEGENDARY[Math.floor(Math.random() * CARDS_LEGENDARY.length)];
+    pool[slot] = { ...legend, special: true };
+  }
   cards = [...pool, ...pool].map((c, i) => ({...c, id:i, revealed:false, matched:false}));
   shuffle(cards);
   board.innerHTML = '';
+  const svg = document.getElementById('connectSvg');
+  if (svg) svg.innerHTML = '';
+  spotSelected = null;
   cards.forEach((c, i) => {
     const wrap = document.createElement('div');
     wrap.className = 'card-wrap';
-    wrap.innerHTML = `<div class="card" id="card${i}" onclick="flipCard(${i})">
-      <div class="card-face card-back"></div>
-      <div class="card-face card-front">
-        <div class="bubble ${c.color}" style="position:absolute;inset:0;border-radius:50%;"></div>
-        <span class="card-emoji">${c.emoji}</span>
-      </div>
-    </div>`;
+    if (isSpot) {
+      // โหมดฝึกสายตา: หน้าเดียว เปิดเผยตลอด ไม่มีการพลิก 3D — แตะคู่ที่ "เชื่อมเส้นถึงกันได้"
+      wrap.innerHTML = `<div class="card spot-tile${c.special ? ' special-tile' : ''}" id="card${i}" onclick="spotPick(${i})">
+        <div class="card-face spot-face">
+          <div class="bubble ${c.color}" style="position:absolute;inset:0;border-radius:50%;"></div>
+          <span class="card-emoji">${c.emoji}</span>
+          ${c.special ? '<div class="bonus-sparkle">✨</div>' : ''}
+        </div>
+      </div>`;
+    } else {
+      wrap.innerHTML = `<div class="card" id="card${i}" onclick="flipCard(${i})">
+        <div class="card-face card-back"></div>
+        <div class="card-face card-front">
+          <div class="bubble ${c.color}" style="position:absolute;inset:0;border-radius:50%;"></div>
+          <span class="card-emoji">${c.emoji}</span>
+        </div>
+      </div>`;
+    }
     board.appendChild(wrap);
   });
+  if (isSpot) { buildSpotGrid(); spotResolveDeadlock(false); resetIdleHint(); }
 }
 function shuffle(a) {for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}}
+
+// ══════════════════════════════════════════
+//  SPOT MODE — จับคู่แบบเชื่อมเส้น (สไตล์โอเน็ต)
+// ══════════════════════════════════════════
+function buildSpotGrid() {
+  spotGrid = [];
+  for (let r = 0; r <= diff.rows + 1; r++) {
+    const row = [];
+    for (let c = 0; c <= diff.cols + 1; c++) row.push(null);
+    spotGrid.push(row);
+  }
+  cards.forEach((c, i) => {
+    const cell = spotCellOf(i);
+    spotGrid[cell.r][cell.c] = i;
+  });
+}
+
+function spotCellOf(i) {
+  return { r: Math.floor(i / diff.cols) + 1, c: (i % diff.cols) + 1 };
+}
+
+// หาเส้นทางเชื่อมระหว่างการ์ด i กับ j โดยหักมุมได้ไม่เกิน 2 จุด
+// และห้ามผ่านการ์ดอื่นที่ยังไม่ถูกจับคู่ (อ้อมผ่านขอบกระดานได้)
+function spotFindPath(i, j, maxTurns) {
+  if (maxTurns === undefined) maxTurns = 2;
+  const a = spotCellOf(i), b = spotCellOf(j);
+  const dirs = [[-1,0],[1,0],[0,-1],[0,1]];
+  const visited = new Map();
+  let queue = [{ r:a.r, c:a.c, dir:-1, turns:0, path:[[a.r,a.c]] }];
+  visited.set(a.r+','+a.c+',-1', 0);
+  while (queue.length) {
+    const cur = queue.shift();
+    for (let d = 0; d < 4; d++) {
+      const nr = cur.r + dirs[d][0], nc = cur.c + dirs[d][1];
+      if (nr < 0 || nr > diff.rows + 1 || nc < 0 || nc > diff.cols + 1) continue;
+      const isTarget = (nr === b.r && nc === b.c);
+      const passable = isTarget || nr < 1 || nr > diff.rows || nc < 1 || nc > diff.cols || spotGrid[nr][nc] === null;
+      if (!passable) continue;
+      const newTurns = cur.dir === -1 ? 0 : (cur.dir === d ? cur.turns : cur.turns + 1);
+      if (newTurns > maxTurns) continue;
+      if (isTarget) return cur.path.concat([[nr, nc]]);
+      const key = nr + ',' + nc + ',' + d;
+      if (visited.has(key) && visited.get(key) <= newTurns) continue;
+      visited.set(key, newTurns);
+      queue.push({ r:nr, c:nc, dir:d, turns:newTurns, path:cur.path.concat([[nr,nc]]) });
+    }
+  }
+  return null;
+}
+
+// คำนวณพิกัดพิกเซลจริงของแต่ละช่อง (รวมช่องขอบนอกกระดาน) จากตำแหนการ์ดบนจอ
+function spotPixelMap() {
+  const wrap = document.getElementById('gameBoardWrap');
+  const wrapRect = wrap.getBoundingClientRect();
+  const centerOf = (idx) => {
+    const el = document.getElementById('card' + idx);
+    const r = el.getBoundingClientRect();
+    return { x: r.left + r.width / 2 - wrapRect.left, y: r.top + r.height / 2 - wrapRect.top };
+  };
+  const p00 = centerOf(0);
+  const p01 = centerOf(Math.min(1, diff.cols * diff.rows - 1));
+  const p10 = centerOf(Math.min(diff.cols, diff.cols * diff.rows - 1));
+  const stepX = p01.x - p00.x;
+  const stepY = p10.y - p00.y;
+  return (r, c) => [p00.x + (c - 1) * stepX, p00.y + (r - 1) * stepY];
+}
+
+// วาดเส้นเชื่อมเรืองแสงระหว่างการ์ดที่จับคู่ติด แล้วค่อยๆจางหายไป
+function spotDrawPath(path, glowColor) {
+  const svg = document.getElementById('connectSvg');
+  if (!svg) return;
+  const toPx = spotPixelMap();
+  const pts = path.map(([r, c]) => toPx(r, c).join(',')).join(' ');
+  const ns = 'http://www.w3.org/2000/svg';
+  const layers = [
+    { width: 9, color: glowColor || '#fff066', opacity: .35 },
+    { width: 5, color: glowColor || '#fff066', opacity: .75 },
+    { width: 2, color: '#ffffff', opacity: 1 },
+  ];
+  const lines = layers.map(l => {
+    const line = document.createElementNS(ns, 'polyline');
+    line.setAttribute('points', pts);
+    line.setAttribute('fill', 'none');
+    line.setAttribute('stroke', l.color);
+    line.setAttribute('stroke-width', l.width);
+    line.setAttribute('stroke-linecap', 'round');
+    line.setAttribute('stroke-linejoin', 'round');
+    line.style.opacity = l.opacity;
+    line.style.transition = 'opacity .35s ease';
+    svg.appendChild(line);
+    return line;
+  });
+  requestAnimationFrame(() => {
+    setTimeout(() => lines.forEach(l => { l.style.opacity = 0; }), 160);
+  });
+  setTimeout(() => lines.forEach(l => l.remove()), 520);
+}
+
+function spotPick(i) {
+  if (gameOver || busy || paused) return;
+  resetIdleHint();
+  const c = cards[i];
+  if (c.matched) return;
+  const el = document.getElementById('card' + i);
+  if (spotSelected === null) {
+    spotSelected = i;
+    el.classList.add('flipped');
+    playSound('flip');
+    return;
+  }
+  if (spotSelected === i) {
+    el.classList.remove('flipped');
+    spotSelected = null;
+    return;
+  }
+  const prevIdx = spotSelected;
+  const prevEl = document.getElementById('card' + prevIdx);
+  if (cards[prevIdx].emoji !== c.emoji) {
+    // สัตว์คนละชนิด — สลับไปเลือกใบใหม่ทันที ไม่ต้องสั่น
+    prevEl.classList.remove('flipped');
+    el.classList.add('flipped');
+    spotSelected = i;
+    playSound('flip');
+    return;
+  }
+  // ถ้าเหลือคู่นี้เป็นคู่สุดท้ายบนกระดานแล้วเชื่อมไม่ได้ภายใน 2 จุดเลี้ยว ให้ผ่อนกฎเพื่อไม่ให้ติดล็อกจบเกมไม่ได้
+  let path = spotFindPath(prevIdx, i);
+  if (!path && matched === diff.pairs * 2 - 2) path = spotFindPath(prevIdx, i, 99);
+  if (path) {
+    busy = true;
+    spotSelected = null;
+    spotDrawPath(path, c.glow);
+    playSound(combo >= 3 ? 'combo' : 'match');
+    setTimeout(() => spotOnMatch(prevIdx, i), 160);
+  } else {
+    el.classList.add('flipped');
+    prevEl.classList.add('shake'); el.classList.add('shake');
+    playSound('miss');
+    spotSelected = null;
+    setTimeout(() => {
+      prevEl.classList.remove('flipped', 'shake');
+      el.classList.remove('flipped', 'shake');
+    }, 380);
+  }
+}
+
+function spotOnMatch(a, b) {
+  cards[a].matched = cards[b].matched = true;
+  const cellA = spotCellOf(a), cellB = spotCellOf(b);
+  spotGrid[cellA.r][cellA.c] = null;
+  spotGrid[cellB.r][cellB.c] = null;
+  matched += 2; combo++;
+  const isSpecial = !!cards[a].special;
+  const basePts = (100 + combo * 20) * (currentDiff + 1);
+  const pts = isSpecial ? basePts * 3 : basePts;
+  score += pts;
+  const elA = document.getElementById('card' + a), elB = document.getElementById('card' + b);
+  elA.classList.remove('flipped'); elB.classList.remove('flipped');
+  elA.classList.add('matched'); elB.classList.add('matched');
+  elA.onclick = null; elB.onclick = null;
+  flashScreen();
+  spawnRing(elA, cards[a].glow); spawnRing(elB, cards[b].glow);
+  spawnStars(elA, cards[a].glow); spawnStars(elB, cards[b].glow);
+  spawnScore(elA, pts, cards[a].glow);
+  if (isSpecial) {
+    playSound('legendary');
+    spawnConfetti();
+    flashScreen();
+    spawnText(`${cards[a].emoji} ตำนาน! โบนัส x3`, '#ffe066', window.innerWidth / 2, 140);
+  }
+  if (combo >= 2) spawnCombo();
+  updateScore();
+  busy = false;
+  if (matched === diff.pairs * 2) { gameOver = true; stopTimer(); setTimeout(onWin, 500); }
+  else if (!boardHasValidMove()) { spotResolveDeadlock(true); }
+}
+
+// สลับ "เนื้อหา" (emoji/สี/เรืองแสง) ของการ์ดในรายชื่อ index ที่ให้มา โดยไม่ยุ่งกับตำแหน่งบนจอ/spotGrid
+// ฟังก์ชันกลางใช้ร่วมกันทั้งปุ่มสลับภาพ (เสียชาร์จ) และระบบป้องกันกระดานตัน (ฟรี)
+function spotApplyShuffle(indices) {
+  if (indices.length < 2) return;
+  // สลับ special ไปพร้อม emoji/color/glow ด้วย ไม่งั้นออร่าทองคำจะค้างอยู่ตำแหน่งเดิมทั้งที่สัตว์ในตำนานย้ายไปแล้ว
+  const props = indices.map(i => ({ emoji: cards[i].emoji, color: cards[i].color, glow: cards[i].glow, special: !!cards[i].special }));
+  for (let k = props.length - 1; k > 0; k--) {
+    const j = Math.floor(Math.random() * (k + 1));
+    [props[k], props[j]] = [props[j], props[k]];
+  }
+  indices.forEach((i, idx) => {
+    cards[i].emoji = props[idx].emoji;
+    cards[i].color = props[idx].color;
+    cards[i].glow = props[idx].glow;
+    cards[i].special = props[idx].special;
+    const el = document.getElementById('card' + i);
+    if (!el) return;
+    const bubble = el.querySelector('.bubble');
+    const emojiSpan = el.querySelector('.card-emoji');
+    if (bubble) bubble.className = 'bubble ' + props[idx].color;
+    if (emojiSpan) emojiSpan.textContent = props[idx].emoji;
+    el.classList.toggle('special-tile', props[idx].special);
+    let sparkle = el.querySelector('.bonus-sparkle');
+    if (props[idx].special && !sparkle) {
+      sparkle = document.createElement('div');
+      sparkle.className = 'bonus-sparkle';
+      sparkle.textContent = '✨';
+      const face = el.querySelector('.spot-face');
+      if (face) face.appendChild(sparkle);
+    } else if (!props[idx].special && sparkle) {
+      sparkle.remove();
+    }
+    el.classList.add('pop-in');
+    setTimeout(() => el.classList.remove('pop-in'), 300);
+  });
+}
+// สลับตำแหน่งสัตว์ที่เหลือ (ที่ยังไม่จับคู่) — ใช้แก้สถานการณ์ที่ไม่มีคู่ใดเชื่อมเส้นได้เลย (ปุ่มกด เสียชาร์จ)
+function spotShuffle() {
+  if (gameMode !== 'spot' || busy || paused) return;
+  // เคลียร์การเลือก/สถานะค้างไว้ก่อนสลับ
+  if (spotSelected !== null) {
+    const prevEl = document.getElementById('card' + spotSelected);
+    if (prevEl) prevEl.classList.remove('flipped');
+    spotSelected = null;
+  }
+  const open = [];
+  cards.forEach((c, i) => { if (!c.matched) open.push(i); });
+  if (open.length < 2) return;
+  spotApplyShuffle(open);
+  playSound('flip');
+  spawnText('🔀 สลับภาพแล้ว!', '#dd88ff', window.innerWidth / 2, 100);
+}
+// ตรวจว่ากระดานยังมีคู่ที่เชื่อมเส้นได้อยู่หรือไม่ (กันบอร์ดตัน)
+function boardHasValidMove() {
+  return findConnectablePair() !== null;
+}
+// สลับภาพให้ "ฟรี" (ไม่เสียชาร์จ) จนกว่าจะมีคู่ที่เชื่อมได้อีกครั้ง — ใช้แก้ทางตันอัตโนมัติ
+function spotResolveDeadlock(announce) {
+  const open = [];
+  cards.forEach((c, i) => { if (!c.matched) open.push(i); });
+  if (open.length < 2) return;
+  let tries = 0;
+  while (!boardHasValidMove() && tries < 60) { spotApplyShuffle(open); tries++; }
+  if (announce) spawnText('🔀 ระบบสลับภาพให้ (กระดานตัน)!', '#dd88ff', window.innerWidth / 2, 100);
+}
 
 function flipCard(i) {
   const c = cards[i];
@@ -2643,6 +3057,39 @@ function startTimer() {
 }
 function stopTimer() { clearInterval(timerInterval); timerInterval = null; }
 
+// ══════════════════════════════════════════
+//  PAUSE
+// ══════════════════════════════════════════
+function openPause() {
+  if (gameOver || paused) return;
+  paused = true;
+  stopTimer();
+  stopIdleHint();
+  // ถ้ากำลังหยุดเวลาด้วยตัวช่วยอยู่ ต้องพักนับเวลาที่เหลือไว้ ไม่งั้นเวลาจริงจะไหลต่อตอนหยุดเกมและกินเวลาฟรีซไปเปล่าๆ
+  if (frozen) {
+    freezePausedRemaining = Math.max(0, 5000 - (Date.now() - freezeStartedAt));
+    clearTimeout(freezeTimer);
+  }
+  document.getElementById('pauseScoreVal').textContent = score.toLocaleString();
+  document.getElementById('pause-modal').classList.add('show');
+}
+function resumeFromPause() {
+  if (!paused) return;
+  paused = false;
+  document.getElementById('pause-modal').classList.remove('show');
+  startTimer();
+  resetIdleHint();
+  if (frozen && freezePausedRemaining > 0) {
+    freezeStartedAt = Date.now();
+    freezeTimer = setTimeout(() => { frozen = false; spawnText('▶ เดินหน้า!','#fff', window.innerWidth/2, 100); }, freezePausedRemaining);
+  }
+}
+function quitFromPause() {
+  paused = false;
+  document.getElementById('pause-modal').classList.remove('show');
+  goMenu();
+}
+
 function updateTimer() {
   const el = document.getElementById('timerNum'), circle = document.getElementById('timerCircle');
   el.textContent = timeLeft;
@@ -2660,13 +3107,15 @@ function updateTimer() {
 // ══════════════════════════════════════════
 async function onWin() {
   stopTimer();
+  stopIdleHint();
+  clearTimeout(freezeTimer);
   score += timeLeft * 10 * (currentDiff + 1);
   updateScore();
   playSound('win');
   spawnConfetti();
   document.getElementById('resultEmoji').textContent = '🏆';
   document.getElementById('resultTitle').textContent = '🎉 ยอดเยี่ยม!';
-  document.getElementById('resultSub').textContent = `จับคู่ครบ! ด่าน${DIFFS[currentDiff].name}`;
+  document.getElementById('resultSub').textContent = `จับคู่ครบ! ด่าน${diff.name}`;
   document.getElementById('finalScore').textContent = score.toLocaleString();
   document.getElementById('btnAgain').textContent = '🔄 เล่นอีกครั้ง';
   document.getElementById('myRankBadge').style.display = 'none';
@@ -2682,6 +3131,8 @@ async function onWin() {
 
 async function onLose() {
   stopTimer();
+  stopIdleHint();
+  clearTimeout(freezeTimer);
   document.getElementById('resultEmoji').textContent = '⏰';
   document.getElementById('resultTitle').textContent = 'หมดเวลา!';
   document.getElementById('resultSub').textContent = `จับคู่ได้ ${matched/2}/${diff.pairs} คู่`;
@@ -2714,79 +3165,111 @@ function updateScore() {
 //  POWER-UPS
 // ══════════════════════════════════════════
 function usePowerup(n) {
-  if (pupCharges[n] <= 0) return;
+  // กัน busy/gameOver ด้วย ไม่งั้นกดตัวช่วยตอนเกมกำลังประมวลผล/จบแล้วจะเสียชาร์จไปฟรีๆโดยไม่เกิดผลอะไร
+  if (paused || busy || gameOver || pupCharges[n] <= 0) return;
   playSound('powerup');
-  const info = PUP_INFO[n];
-  showAd(info.icon, info.name, info.reward, () => activatePup(n));
+  activatePup(n);
 }
 function activatePup(n) {
   pupCharges[n]--; updatePupUI();
   if (n === 0) { timeLeft = Math.min(timeLeft + 15, totalTime + 30); updateTimer(); spawnText('+15 วิ ⏱️','#22ee55', window.innerWidth/2, 100); }
-  else if (n === 1) { peekAllCards(); }
+  else if (n === 1) { spotShuffle(); }
   else if (n === 2) { autoMatch(); }
-  else if (n === 3) { frozen = true; spawnText('❄️ หยุดเวลา!','#66eeff', window.innerWidth/2, 100); setTimeout(() => { frozen = false; spawnText('▶ เดินหน้า!','#fff', window.innerWidth/2, 100); }, 5000); }
+  else if (n === 3) {
+    // ถ้ามีชาร์จเหลือแล้วกดซ้ำตอนกำลังหยุดเวลาอยู่ ต้องเคลียร์ตัวจับเวลาเก่าก่อน ไม่งั้นมันจะมาเผลอเปิดเวลาเดินคืนก่อนครบรอบใหม่
+    frozen = true;
+    freezeStartedAt = Date.now();
+    spawnText('❄️ หยุดเวลา!','#66eeff', window.innerWidth/2, 100);
+    clearTimeout(freezeTimer);
+    freezeTimer = setTimeout(() => { frozen = false; spawnText('▶ เดินหน้า!','#fff', window.innerWidth/2, 100); }, 5000);
+  }
+  else if (n === 4) { spotHint(); }
 }
-function peekAllCards() {
-  const overlay = document.createElement('div');
-  overlay.className = 'peek-overlay';
-  document.getElementById('effects').appendChild(overlay);
-  // จำไว้ว่า peek เปิดการ์ดใด — cleanup จะปิดเฉพาะการ์ดเหล่านั้นเท่านั้น
-  const peekCards = [];
-  cards.forEach((c, i) => {
-    if (!c.matched && !c.revealed) {
-      document.getElementById('card'+i).classList.add('flipped');
-      peekCards.push(i);
+// หาคู่การ์ดที่ยังไม่จับคู่ และ "เชื่อมเส้นถึงกันได้จริง" คู่แรกที่เจอ — คืนค่า {a,b,path} หรือ null ถ้าไม่มีเลย (ทางตัน)
+// คืน path ที่ตรวจสอบแล้วไปด้วยเลย เพื่อไม่ให้ผู้เรียกต้องหาเส้นทางซ้ำด้วยกฎจุดเลี้ยวที่อาจไม่ตรงกัน (เคยทำให้ autoMatch ค้าง busy=true ตอนคู่สุดท้ายต้องใช้เส้นทางแบบผ่อนกฎ)
+function findConnectablePair() {
+  const open = [];
+  cards.forEach((c, i) => { if (!c.matched) open.push(i); });
+  for (let i = 0; i < open.length; i++) {
+    for (let j = i + 1; j < open.length; j++) {
+      const a = open[i], b = open[j];
+      if (cards[a].emoji !== cards[b].emoji) continue;
+      const path = spotFindPath(a, b);
+      if (path) return { a, b, path };
     }
-  });
-  if (peekTimeout) clearTimeout(peekTimeout);
-  peekTimeout = setTimeout(() => {
-    peekCards.forEach(i => {
-      // ปิดเฉพาะการ์ดที่ยังไม่ matched และผู้เล่นยังไม่ได้คลิก
-      if (!cards[i].matched && !cards[i].revealed)
-        document.getElementById('card'+i).classList.remove('flipped');
-    });
-    overlay.remove();
-    peekTimeout = null;
-  }, 1800);
+  }
+  // เหลือคู่เดียวสุดท้ายบนกระดาน แต่ตำแหน่งดันเชื่อมกันไม่ได้ภายใน 2 จุดเลี้ยว (สลับภาพแก้ไม่ได้เพราะมีแค่คู่นี้)
+  // ผ่อนกฎจำนวนจุดเลี้ยวให้คู่สุดท้ายนี้โดยเฉพาะ ป้องกันไม่ให้ผู้เล่นติดล็อกจบเกมไม่ได้
+  if (open.length === 2 && cards[open[0]].emoji === cards[open[1]].emoji) {
+    const path = spotFindPath(open[0], open[1], 99);
+    if (path) return { a: open[0], b: open[1], path };
+  }
+  return null;
 }
+// หาคู่ที่ "เชื่อมเส้นถึงกันได้จริง" แล้วจับให้อัตโนมัติ — ถ้าไม่มีคู่ใดเชื่อมได้เลย (ทางตัน) ให้สลับภาพให้แทน
 function autoMatch() {
   if (busy) return; // อย่าทำงานขณะกำลังเปรียบเทียบคู่
-  // ถ้ามีการ์ดพลิกไปแล้ว 1 ใบ (flipped[0]) ให้หาคู่ของมันก่อน
-  if (flipped.length === 1) {
-    const a = flipped[0];
-    for (let i = 0; i < cards.length; i++) {
-      if (i !== a && !cards[i].matched && !cards[i].revealed && cards[i].emoji === cards[a].emoji) {
-        busy = true;
-        cards[i].revealed = true;
-        document.getElementById('card'+i).classList.add('flipped');
-        setTimeout(() => onMatch(a, i), 600);
-        return;
-      }
-    }
-    // ไม่พบคู่ (ไม่ควรเกิดในเกมปกติ) — รีเซตการ์ดที่ค้างไว้
-    cards[a].revealed = false;
-    document.getElementById('card'+a).classList.remove('flipped');
-    flipped = [];
+  if (spotSelected !== null) {
+    const prevEl = document.getElementById('card' + spotSelected);
+    if (prevEl) prevEl.classList.remove('flipped');
+    spotSelected = null;
   }
-  // หาคู่ใหม่จากการ์ดที่ยังไม่ได้เปิด
-  const available = [];
-  cards.forEach((c, i) => { if (!c.matched && !c.revealed) available.push(i); });
-  if (available.length < 2) return;
-  for (let i = 0; i < available.length; i++) {
-    for (let j = i + 1; j < available.length; j++) {
-      if (cards[available[i]].emoji === cards[available[j]].emoji) {
-        const a = available[i], b = available[j];
-        busy = true;
-        document.getElementById('card'+a).classList.add('flipped');
-        document.getElementById('card'+b).classList.add('flipped');
-        setTimeout(() => onMatch(a, b), 600);
-        return;
-      }
-    }
+  const result = findConnectablePair();
+  if (result) {
+    const { a, b, path } = result;
+    busy = true;
+    document.getElementById('card'+a).classList.add('flipped');
+    document.getElementById('card'+b).classList.add('flipped');
+    spotDrawPath(path, cards[a].glow);
+    playSound(combo >= 3 ? 'combo' : 'match');
+    setTimeout(() => spotOnMatch(a, b), 160);
+    return;
   }
+  // ไม่มีคู่ใดเชื่อมเส้นได้เลยตอนนี้ — สลับภาพให้แทนเพื่อเปิดทาง
+  spotShuffle();
+}
+// ชี้คู่ที่จับได้ให้ดูชั่วคราว (ไม่จับคู่ให้อัตโนมัติ — ผู้เล่นต้องแตะเอง)
+function spotHint() {
+  if (busy) return;
+  const pair = findConnectablePair();
+  if (!pair) { spawnText('🔀 กระดานตันชั่วคราว...','#dd88ff', window.innerWidth/2, 100); spotResolveDeadlock(); return; }
+  const { a, b } = pair;
+  const elA = document.getElementById('card'+a), elB = document.getElementById('card'+b);
+  if (elA) elA.classList.add('hint-glow');
+  if (elB) elB.classList.add('hint-glow');
+  playSound('flip');
+  spawnText('💡 นี่ไง!','#fff066', window.innerWidth/2, 100);
+  setTimeout(() => { if (elA) elA.classList.remove('hint-glow'); if (elB) elB.classList.remove('hint-glow'); }, 1800);
+}
+
+// ══════════════════════════════════════════
+//  IDLE HINT — ถ้าผู้เล่นไม่เลือกการ์ดเลย 10 วิ ให้ไฟกระพริบแนะนำคู่ที่จับได้ (ไม่เสียชาร์จ)
+// ══════════════════════════════════════════
+function stopIdleHint() {
+  clearTimeout(idleHintTimer);
+  idleHintTimer = null;
+  idleHintTiles.forEach(i => { const el = document.getElementById('card' + i); if (el) el.classList.remove('hint-glow'); });
+  idleHintTiles = [];
+}
+function resetIdleHint() {
+  stopIdleHint();
+  if (gameOver) return;
+  idleHintTimer = setTimeout(triggerIdleHint, 10000);
+}
+function triggerIdleHint() {
+  if (gameOver) return;
+  if (paused || busy) { idleHintTimer = setTimeout(triggerIdleHint, 1000); return; }
+  const pair = findConnectablePair();
+  if (!pair) { idleHintTimer = setTimeout(triggerIdleHint, 1000); return; }
+  const { a, b } = pair;
+  idleHintTiles = [a, b];
+  const elA = document.getElementById('card' + a), elB = document.getElementById('card' + b);
+  if (elA) elA.classList.add('hint-glow');
+  if (elB) elB.classList.add('hint-glow');
+  spawnText('💡 ลองดูคู่นี้สิ!', '#fff066', window.innerWidth / 2, 100);
 }
 function updatePupUI() {
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < 5; i++) {
     document.getElementById('pup'+i+'c').textContent = pupCharges[i];
     document.getElementById('pup'+i).classList.toggle('used', pupCharges[i] <= 0);
   }
